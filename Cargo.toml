@@ -1,0 +1,24 @@
+[package]
+name = "cubealqot"
+version = "0.1.0"
+edition = "2024"
+default-run = "cubealqot"
+
+[dependencies]
+bitvec = "1"
+clap = { version = "4", features = ["derive"] }
+ctrlc = "3"
+fs2 = "0.4"
+num-bigint = "0.4"
+num-traits = "0.2"
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["arbitrary_precision"] }
+sha2 = "0.10"
+toml = "0.8"
+
+[dev-dependencies]
+criterion = "0.5"
+
+[[bench]]
+name = "baseline"
+harness = false

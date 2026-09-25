@@ -1,0 +1,30 @@
+# Build products and local caches
+/target/
+/target-*/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+.env
+.env.*
+*.tmp
+*.swp
+.DS_Store
+Thumbs.db
+
+# Local originals and machine-specific configuration
+/redacted/
+
+# Generated runs; retain only the canonical store and reusable candidate inputs.
+/out/*
+!/out/m7-proof-store/
+/out/m7-proof-store/store.lock
+/out/m7-proof-store/staging/
+!/out/m7-candidate-analysis/
+/out/m7-candidate-analysis/*
+!/out/m7-candidate-analysis/candidate-jobs.json
+!/out/m7-candidate-analysis/README.md
+
+# Accidentally nested run output and machine profiling snapshots
+/cubealqot/
+/profile-*.json

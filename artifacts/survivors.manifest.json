@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "captured_at_utc": "2026-09-25T17:04:57.881130+00:00",
+  "source_glob": "out/survivors*.jsonl",
+  "deduplication": "identical records by m; conflicting duplicates rejected",
+  "record_count": 2079,
+  "duplicate_records_removed": 3,
+  "minimum_m": 809964431,
+  "maximum_m": 1504657268855,
+  "sha256": "b11c58f26bd885ca2201d62509b118562fe5e667c20bd86b04a1c8af2c4c14d7",
+  "sources": [
+    {
+      "path": "out/survivors-100000000001-120000000000-t4.jsonl",
+      "bytes_read": 8741,
+      "sha256": "4585b1bd665ccc3eefb56d53ee3746ad5e15e209612c62c9e87848f6a4a27b94",
+      "records": 16,
+      "omitted_incomplete_tail_bytes": 0
+    },
+    {
+      "path": "out/survivors-10000000001-50000000000-t4.jsonl",
+      "bytes_read": 22674,
+      "sha256": "264c2a436578d65d1d63fae1d42ad7c70d561750cd5982f0b729c547ed2cc085",
+      "records": 43,
+      "omitted_incomplete_tail_bytes": 0
+    },
+    {
+      "path": "out/survivors-1014200000001-1200000000000-t4-family-snapshot-20260921.jsonl",
+      "bytes_read": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "records": 0,
+      "omitted_incomplete_tail_bytes": 0
+    },
+    {
+      "path": "out/survivors-1014200000001-1200000000000-t4-family.jsonl",
+      "bytes_read": 39235,
+      "sha256": "e1b285a81437aa8d1c4f57071372016802d321b40485e6d7c3f2e0e633116763",
+      "records": 73,
+      "omitted_incomplete_tail_bytes": 0
+    },
+    {
+      "path": "out/survivors-1067200000001-1200000000000-t4-family.jsonl",
+      "bytes_read": 13908,
+      "sha256": "89d76ea44bcee0d2c7c7e13c401a7c4527dd2247f8c0315fd1038018d453f059",
+      "records": 26,
+      "omitted_incomplete_tail_bytes": 0
+    },
+    {
+      "path": "out/survivors-1085200000001-1200000000000-t4-family.jsonl",
+      "bytes_read": 5991,
+      "sha256": "760ee2c585566105e5655ca11f65a50051639210bbffce6f31141cc4a4b48833",
+      "records": 11,
+      "omitted_incomplete_tail_bytes": 0
+    },
+    {
+      "path": "out/survivors-1091200000001-1200000000000-t4-family.jsonl",
+      "bytes_read": 58253,
+      "sha256": "c1e82179b93a8266043941c0dba6586c27e4f67491414a89699026c4aba2e8be",
+      "records": 112,
+      "omitted_incomplete_tail_bytes": 0
+    },
+    {
+      "path": "out/survivors-1200000000001-1500000000000-t4-family.jsonl",
+      "bytes_read": 183149,
+      "sha256": "78dbca60d17efddcf726ae6f367b1946e21a69830552ff0f70766d4207b1c8ed",
+      "records": 349,
+      "omitted_incomplete_tail_bytes": 0
+    },
+    {
+      "path": "out/survivors-120000000001-200000000000-t4.jsonl",
+      "bytes_read": 62994,
+      "sha256": "619ad370d83e8a65c03a0f5806557f9ee58059b729e1419675fbb92a3c69794b",
+      "records": 118,
+      "omitted_incomplete_tail_bytes": 0
+    },
+    {
+      "path": "out/survivors-1500000000001-2000000000000-t4-family.jsonl",
+      "bytes_read": 3919,
+      "sha256": "98948c513a51c7c94af99bcc671a1fcaf43e486bf543ed9b1bb4dfc0adc71832",
+      "records": 8,
+      "omitted_incomplete_tail_bytes": 0
+    },
+    {
+      "path": "out/survivors-200000000001-250000000000-t4.jsonl",
+      "bytes_read": 38830,
+      "sha256": "77e61015ea288bcf226e251804d5adcd75fc05b5678d50f74fd8620918454140",
+      "records": 75,
+      "omitted_incomplete_tail_bytes": 0
+    },
+    {
+      "path": "out/survivors-250000000001-400000000000-t4.jsonl",
+      "bytes_read": 113723,
+      "sha256": "c96ba7e74faa7ce74345294bf5ac0bd2525fcddf8e3bfddb1388374c79403bd1",
+      "records": 218,
+      "omitted_incomplete_tail_bytes": 0
+    },
+    {
+      "path": "out/survivors-400000000001-500000000000-t4.jsonl",
+      "bytes_read": 81863,
+      "sha256": "1c0d473dc7b41cb9cc24ef3af1bfd1d68a3b9dbcb37e6c91f26310e1c69385d3",
+      "records": 159,
+      "omitted_incomplete_tail_bytes": 0
+    },
+    {
+      "path": "out/survivors-500000000001-700000000000-t4.jsonl",
+      "bytes_read": 146291,
+      "sha256": "dfbaea33a2df99491ab9b91223f6f5ef9205ccd894bdffd0de8f62ebfefc7691",
+      "records": 285,
+      "omitted_incomplete_tail_bytes": 0
+    },
+    {
+      "path": "out/survivors-50000000001-100000000000-t4.jsonl",
+      "bytes_read": 27289,
+      "sha256": "4473c2c4e6415f532a4522e887423534e11a31365814ba3f0cfa4541bc669b7e",
+      "records": 52,
+      "omitted_incomplete_tail_bytes": 0
+    },
+    {
+      "path": "out/survivors-700000000001-800000000000-t4.jsonl",
+      "bytes_read": 86954,
+      "sha256": "6620791ba04a2088b17b0ce9efe7113daa28f679a5a840322384b40b0844a1e7",
+      "records": 169,
+      "omitted_incomplete_tail_bytes": 0
+    },
+    {
+      "path": "out/survivors-800000000001-1200000000000-t4.jsonl",
+      "bytes_read": 183602,
+      "sha256": "921cd57b3d8ee7854aad3ebe0f2d618ff8d0cc1a5983bfd2ab9438e6fae24720",
+      "records": 356,
+      "omitted_incomplete_tail_bytes": 0
+    },
+    {
+      "path": "out/survivors.jsonl",
+      "bytes_read": 6452,
+      "sha256": "c48bf9a11dd673edc560f53a0136606d9aa79b347ff101a9c338a8c8ea9cd30d",
+      "records": 12,
+      "omitted_incomplete_tail_bytes": 0
+    }
+  ]
+}

@@ -1,0 +1,4199 @@
+{
+  "kind": "m7-candidate-jobs",
+  "captured_at_utc": "2026-09-21T00:00:00Z",
+  "jobs": [
+    {
+      "N": "93",
+      "factors": [
+        [
+          3,
+          1
+        ],
+        [
+          31,
+          1
+        ]
+      ]
+    },
+    {
+      "N": "77",
+      "factors": [
+        [
+          7,
+          1
+        ],
+        [
+          11,
+          1
+        ]
+      ]
+    },
+    {
+      "N": "80",
+      "factors": [
+        [
+          2,
+          4
+        ],
+        [
+          5,
+          1
+        ]
+      ]
+    },
+    {
+      "N": "111",
+      "factors": [
+        [
+          3,
+          1
+        ],
+        [
+          37,
+          1
+        ]
+      ]
+    },
+    {
+      "N": "140",
+      "factors": [
+        [
+          2,
+          2
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          7,
+          1
+        ]
+      ]
+    },
+    {
+      "N": "939",
+      "factors": [
+        [
+          3,
+          1
+        ],
+        [
+          313,
+          1
+        ]
+      ]
+    },
+    {
+      "N": "17",
+      "factors": [
+        [
+          17,
+          1
+        ]
+      ]
+    },
+    {
+      "N": "29",
+      "factors": [
+        [
+          29,
+          1
+        ]
+      ]
+    },
+    {
+      "N": "52",
+      "factors": [
+        [
+          2,
+          2
+        ],
+        [
+          13,
+          1
+        ]
+      ]
+    },
+    {
+      "N": "63",
+      "factors": [
+        [
+          3,
+          2
+        ],
+        [
+          7,
+          1
+        ]
+      ]
+    },
+    {
+      "N": "123",
+      "factors": [
+        [
+          3,
+          1
+        ],
+        [
+          41,
+          1
+        ]
+      ]
+    },
+    {
+      "N": "47",
+      "factors": [
+        [
+          47,
+          1
+        ]
+      ]
+    },
+    {
+      "N": "49",
+      "factors": [
+        [
+          7,
+          2
+        ]
+      ]
+    },
+    {
+      "N": "57",
+      "factors": [
+        [
+          3,
+          1
+        ],
+        [
+          19,
+          1
+        ]
+      ]
+    },
+    {
+      "N": "59",
+      "factors": [
+        [
+          59,
+          1
+        ]
+      ]
+    },
+    {
+      "N": "25",
+      "factors": [
+        [
+          5,
+          2
+        ]
+      ]
+    },
+    {
+      "N": "43",
+      "factors": [
+        [
+          43,
+          1
+        ]
+      ]
+    },
+    {
+      "N": "51",
+      "factors": [
+        [
+          3,
+          1
+        ],
+        [
+          17,
+          1
+        ]
+      ]
+    },
+    {
+      "N": "55",
+      "factors": [
+        [
+          5,
+          1
+        ],
+        [
+          11,
+          1
+        ]
+      ]
+    },
+    {
+      "N": "33",
+      "factors": [
+        [
+          3,
+          1
+        ],
+        [
+          11,
+          1
+        ]
+      ]
+    },
+    {
+      "priority": 21,
+      "batch": "expansion-20260922",
+      "N": "117",
+      "factors": [
+        [
+          3,
+          2
+        ],
+        [
+          13,
+          1
+        ]
+      ],
+      "A": "2601340",
+      "D": "999727",
+      "curve_coefficients": [
+        "0",
+        "2601340",
+        "0",
+        "2600629834180",
+        "2599919862235268860"
+      ]
+    },
+    {
+      "priority": 22,
+      "batch": "expansion-20260922",
+      "N": "196",
+      "factors": [
+        [
+          2,
+          2
+        ],
+        [
+          7,
+          2
+        ]
+      ],
+      "A": "17431639",
+      "D": "9902103",
+      "curve_coefficients": [
+        "0",
+        "17431639",
+        "0",
+        "172609884836817",
+        "1709200858472300126151"
+      ]
+    },
+    {
+      "priority": 23,
+      "batch": "expansion-20260922",
+      "N": "98",
+      "factors": [
+        [
+          2,
+          1
+        ],
+        [
+          7,
+          2
+        ]
+      ],
+      "A": "2058855",
+      "D": "1117663",
+      "curve_coefficients": [
+        "0",
+        "2058855",
+        "0",
+        "2301106055865",
+        "2571861097716243495"
+      ]
+    },
+    {
+      "priority": 24,
+      "batch": "expansion-20260922",
+      "N": "161",
+      "factors": [
+        [
+          7,
+          1
+        ],
+        [
+          23,
+          1
+        ]
+      ],
+      "A": "5088000",
+      "D": "914719",
+      "curve_coefficients": [
+        "0",
+        "5088000",
+        "0",
+        "4654090272000",
+        "4257184799513568000"
+      ]
+    },
+    {
+      "priority": 25,
+      "batch": "expansion-20260922",
+      "N": "171",
+      "factors": [
+        [
+          3,
+          2
+        ],
+        [
+          19,
+          1
+        ]
+      ],
+      "A": "7913320",
+      "D": "2913109",
+      "curve_coefficients": [
+        "0",
+        "7913320",
+        "0",
+        "23052363711880",
+        "67154048200351034920"
+      ]
+    },
+    {
+      "priority": 26,
+      "batch": "expansion-20260922",
+      "N": "213",
+      "factors": [
+        [
+          3,
+          1
+        ],
+        [
+          71,
+          1
+        ]
+      ],
+      "A": "14520960",
+      "D": "4857363",
+      "curve_coefficients": [
+        "0",
+        "14520960",
+        "0",
+        "70533573828480",
+        "342607171772227098240"
+      ]
+    },
+    {
+      "priority": 27,
+      "batch": "expansion-20260922",
+      "N": "301",
+      "factors": [
+        [
+          7,
+          1
+        ],
+        [
+          43,
+          1
+        ]
+      ],
+      "A": "32560000",
+      "D": "5289099",
+      "curve_coefficients": [
+        "0",
+        "32560000",
+        "0",
+        "172213063440000",
+        "910851941627440560000"
+      ]
+    },
+    {
+      "priority": 28,
+      "batch": "expansion-20260922",
+      "N": "1159",
+      "factors": [
+        [
+          19,
+          1
+        ],
+        [
+          61,
+          1
+        ]
+      ],
+      "A": "1670731360",
+      "D": "113868681",
+      "curve_coefficients": [
+        "0",
+        "1670731360",
+        "0",
+        "190243976268536160",
+        "21662830645893514340004960"
+      ]
+    },
+    {
+      "priority": 29,
+      "batch": "expansion-20260922",
+      "N": "27",
+      "factors": [
+        [
+          3,
+          3
+        ]
+      ],
+      "A": "29524",
+      "D": "9841",
+      "curve_coefficients": [
+        "0",
+        "29524",
+        "0",
+        "290545684",
+        "2859260076244"
+      ]
+    },
+    {
+      "priority": 30,
+      "batch": "expansion-20260922",
+      "N": "69",
+      "factors": [
+        [
+          3,
+          1
+        ],
+        [
+          23,
+          1
+        ]
+      ],
+      "A": "508800",
+      "D": "180291",
+      "curve_coefficients": [
+        "0",
+        "508800",
+        "0",
+        "91732060800",
+        "16538464973692800"
+      ]
+    },
+    {
+      "priority": 31,
+      "batch": "expansion-20260922",
+      "N": "73",
+      "factors": [
+        [
+          73,
+          1
+        ]
+      ],
+      "A": "394420",
+      "D": "5403",
+      "curve_coefficients": [
+        "0",
+        "394420",
+        "0",
+        "2131051260",
+        "11514069957780"
+      ]
+    },
+    {
+      "priority": 32,
+      "batch": "expansion-20260922",
+      "N": "95",
+      "factors": [
+        [
+          5,
+          1
+        ],
+        [
+          19,
+          1
+        ]
+      ],
+      "A": "1129440",
+      "D": "272065",
+      "curve_coefficients": [
+        "0",
+        "1129440",
+        "0",
+        "307281093600",
+        "83600430730284000"
+      ]
+    },
+    {
+      "priority": 33,
+      "batch": "reserve-20260922",
+      "N": "104",
+      "factors": [
+        [
+          2,
+          3
+        ],
+        [
+          13,
+          1
+        ]
+      ],
+      "A": "2434740",
+      "D": "1309876",
+      "curve_coefficients": [
+        "0",
+        "2434740",
+        "0",
+        "3189207492240",
+        "4177466353105362240"
+      ]
+    },
+    {
+      "priority": 34,
+      "batch": "reserve-20260922",
+      "N": "115",
+      "factors": [
+        [
+          5,
+          1
+        ],
+        [
+          23,
+          1
+        ]
+      ],
+      "A": "1984320",
+      "D": "463445",
+      "curve_coefficients": [
+        "0",
+        "1984320",
+        "0",
+        "919623182400",
+        "426194765767368000"
+      ]
+    },
+    {
+      "priority": 35,
+      "batch": "reserve-20260922",
+      "N": "135",
+      "factors": [
+        [
+          3,
+          3
+        ],
+        [
+          5,
+          1
+        ]
+      ],
+      "A": "4605744",
+      "D": "2145369",
+      "curve_coefficients": [
+        "0",
+        "4605744",
+        "0",
+        "9881020399536",
+        "21198434853532148784"
+      ]
+    },
+    {
+      "priority": 36,
+      "batch": "reserve-20260922",
+      "N": "141",
+      "factors": [
+        [
+          3,
+          1
+        ],
+        [
+          47,
+          1
+        ]
+      ],
+      "A": "4243200",
+      "D": "1439979",
+      "curve_coefficients": [
+        "0",
+        "4243200",
+        "0",
+        "6110118892800",
+        "8798442893135251200"
+      ]
+    },
+    {
+      "priority": 37,
+      "batch": "reserve-20260922",
+      "N": "147",
+      "factors": [
+        [
+          3,
+          1
+        ],
+        [
+          7,
+          2
+        ]
+      ],
+      "A": "5490280",
+      "D": "2313757",
+      "curve_coefficients": [
+        "0",
+        "5490280",
+        "0",
+        "12703173781960",
+        "29392057260226423720"
+      ]
+    },
+    {
+      "priority": 38,
+      "batch": "reserve-20260922",
+      "N": "153",
+      "factors": [
+        [
+          3,
+          2
+        ],
+        [
+          17,
+          1
+        ]
+      ],
+      "A": "5705460",
+      "D": "2123883",
+      "curve_coefficients": [
+        "0",
+        "5705460",
+        "0",
+        "12117729501180",
+        "25736639686154681940"
+      ]
+    },
+    {
+      "priority": 39,
+      "batch": "reserve-20260922",
+      "N": "169",
+      "factors": [
+        [
+          13,
+          2
+        ]
+      ],
+      "A": "5229043",
+      "D": "402234",
+      "curve_coefficients": [
+        "0",
+        "5229043",
+        "0",
+        "2103298882062",
+        "846018322527326508"
+      ]
+    },
+    {
+      "priority": 40,
+      "batch": "reserve-20260922",
+      "N": "175",
+      "factors": [
+        [
+          5,
+          2
+        ],
+        [
+          7,
+          1
+        ]
+      ],
+      "A": "7812400",
+      "D": "2453025",
+      "curve_coefficients": [
+        "0",
+        "7812400",
+        "0",
+        "19164012510000",
+        "47009801787342750000"
+      ]
+    },
+    {
+      "priority": 41,
+      "batch": "reserve-20260922",
+      "N": "237",
+      "factors": [
+        [
+          3,
+          1
+        ],
+        [
+          79,
+          1
+        ]
+      ],
+      "A": "19974400",
+      "D": "6662347",
+      "curve_coefficients": [
+        "0",
+        "19974400",
+        "0",
+        "133076383916800",
+        "886601047158940729600"
+      ]
+    },
+    {
+      "priority": 42,
+      "batch": "reserve-20260922",
+      "N": "307",
+      "factors": [
+        [
+          307,
+          1
+        ]
+      ],
+      "A": "29029000",
+      "D": "94557",
+      "curve_coefficients": [
+        "0",
+        "29029000",
+        "0",
+        "2744895153000",
+        "259549050982221000"
+      ]
+    },
+    {
+      "priority": 43,
+      "batch": "reserve-20260922",
+      "N": "319",
+      "factors": [
+        [
+          11,
+          1
+        ],
+        [
+          29,
+          1
+        ]
+      ],
+      "A": "36980640",
+      "D": "4518881",
+      "curve_coefficients": [
+        "0",
+        "36980640",
+        "0",
+        "167111111463840",
+        "755155226482828763040"
+      ]
+    },
+    {
+      "priority": 44,
+      "batch": "reserve-20260922",
+      "N": "387",
+      "factors": [
+        [
+          3,
+          2
+        ],
+        [
+          43,
+          1
+        ]
+      ],
+      "A": "88970200",
+      "D": "31009597",
+      "curve_coefficients": [
+        "0",
+        "88970200",
+        "0",
+        "2758930047009400",
+        "85553308908952549211800"
+      ]
+    },
+    {
+      "priority": 45,
+      "batch": "reserve-20260922",
+      "N": "553",
+      "factors": [
+        [
+          7,
+          1
+        ],
+        [
+          79,
+          1
+        ]
+      ],
+      "A": "199744000",
+      "D": "30631623",
+      "curve_coefficients": [
+        "0",
+        "199744000",
+        "0",
+        "6118482904512000",
+        "187419061662956582976000"
+      ]
+    },
+    {
+      "priority": 46,
+      "batch": "fresh-20260923",
+      "N": "31",
+      "factors": [
+        [
+          31,
+          1
+        ]
+      ],
+      "A": "30784",
+      "D": "993",
+      "curve_coefficients": [
+        "0",
+        "30784",
+        "0",
+        "30568512",
+        "30354532416"
+      ],
+      "observed_matches": 2,
+      "max_coefficient_bits": 35
+    },
+    {
+      "priority": 47,
+      "batch": "fresh-20260923",
+      "N": "16",
+      "factors": [
+        [
+          2,
+          4
+        ]
+      ],
+      "A": "8191",
+      "D": "4095",
+      "curve_coefficients": [
+        "0",
+        "8191",
+        "0",
+        "33542145",
+        "137355083775"
+      ],
+      "observed_matches": 2,
+      "max_coefficient_bits": 37
+    },
+    {
+      "priority": 48,
+      "batch": "fresh-20260923",
+      "N": "79",
+      "factors": [
+        [
+          79,
+          1
+        ]
+      ],
+      "A": "499360",
+      "D": "6321",
+      "curve_coefficients": [
+        "0",
+        "499360",
+        "0",
+        "3156454560",
+        "19951949273760"
+      ],
+      "observed_matches": 2,
+      "max_coefficient_bits": 45
+    },
+    {
+      "priority": 49,
+      "batch": "fresh-20260923",
+      "N": "28",
+      "factors": [
+        [
+          2,
+          2
+        ],
+        [
+          7,
+          1
+        ]
+      ],
+      "A": "50800",
+      "D": "28848",
+      "curve_coefficients": [
+        "0",
+        "50800",
+        "0",
+        "1465478400",
+        "42276120883200"
+      ],
+      "observed_matches": 2,
+      "max_coefficient_bits": 46
+    },
+    {
+      "priority": 50,
+      "batch": "fresh-20260923",
+      "N": "109",
+      "factors": [
+        [
+          109,
+          1
+        ]
+      ],
+      "A": "1307020",
+      "D": "11991",
+      "curve_coefficients": [
+        "0",
+        "1307020",
+        "0",
+        "15672476820",
+        "187928669548620"
+      ],
+      "observed_matches": 2,
+      "max_coefficient_bits": 48
+    },
+    {
+      "priority": 51,
+      "batch": "fresh-20260923",
+      "N": "36",
+      "factors": [
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "A": "138811",
+      "D": "92155",
+      "curve_coefficients": [
+        "0",
+        "138811",
+        "0",
+        "12792127705",
+        "1178858528654275"
+      ],
+      "observed_matches": 2,
+      "max_coefficient_bits": 51
+    },
+    {
+      "priority": 52,
+      "batch": "fresh-20260923",
+      "N": "56",
+      "factors": [
+        [
+          2,
+          3
+        ],
+        [
+          7,
+          1
+        ]
+      ],
+      "A": "409200",
+      "D": "233584",
+      "curve_coefficients": [
+        "0",
+        "409200",
+        "0",
+        "95582572800",
+        "22326559684915200"
+      ],
+      "observed_matches": 2,
+      "max_coefficient_bits": 55
+    },
+    {
+      "priority": 53,
+      "batch": "fresh-20260923",
+      "N": "91",
+      "factors": [
+        [
+          7,
+          1
+        ],
+        [
+          13,
+          1
+        ]
+      ],
+      "A": "952000",
+      "D": "198429",
+      "curve_coefficients": [
+        "0",
+        "952000",
+        "0",
+        "188904408000",
+        "37484112775032000"
+      ],
+      "observed_matches": 2,
+      "max_coefficient_bits": 56
+    },
+    {
+      "priority": 54,
+      "batch": "fresh-20260923",
+      "N": "383",
+      "factors": [
+        [
+          383,
+          1
+        ]
+      ],
+      "A": "56328960",
+      "D": "147073",
+      "curve_coefficients": [
+        "0",
+        "56328960",
+        "0",
+        "8284469134080",
+        "1218421728956547840"
+      ],
+      "observed_matches": 2,
+      "max_coefficient_bits": 61
+    },
+    {
+      "priority": 55,
+      "batch": "fresh-20260923",
+      "N": "155",
+      "factors": [
+        [
+          5,
+          1
+        ],
+        [
+          31,
+          1
+        ]
+      ],
+      "A": "4802304",
+      "D": "1078429",
+      "curve_coefficients": [
+        "0",
+        "4802304",
+        "0",
+        "5178943900416",
+        "5585123291581726464"
+      ],
+      "observed_matches": 2,
+      "max_coefficient_bits": 63
+    },
+    {
+      "priority": 56,
+      "batch": "fresh-20260923",
+      "N": "557",
+      "factors": [
+        [
+          557,
+          1
+        ]
+      ],
+      "A": "173119500",
+      "D": "310807",
+      "curve_coefficients": [
+        "0",
+        "173119500",
+        "0",
+        "53806752436500",
+        "16723515304531255500"
+      ],
+      "observed_matches": 2,
+      "max_coefficient_bits": 64
+    },
+    {
+      "priority": 57,
+      "batch": "fresh-20260923",
+      "N": "203",
+      "factors": [
+        [
+          7,
+          1
+        ],
+        [
+          29,
+          1
+        ]
+      ],
+      "A": "10104000",
+      "D": "1738573",
+      "curve_coefficients": [
+        "0",
+        "10104000",
+        "0",
+        "17566541592000",
+        "30540714915228216000"
+      ],
+      "observed_matches": 2,
+      "max_coefficient_bits": 65
+    },
+    {
+      "priority": 58,
+      "batch": "fresh-20260923",
+      "N": "361",
+      "factors": [
+        [
+          19,
+          2
+        ]
+      ],
+      "A": "49659541",
+      "D": "2613660",
+      "curve_coefficients": [
+        "0",
+        "49659541",
+        "0",
+        "129793155930060",
+        "339235179928160619600"
+      ],
+      "observed_matches": 2,
+      "max_coefficient_bits": 69
+    },
+    {
+      "priority": 59,
+      "batch": "fresh-20260923",
+      "N": "23",
+      "factors": [
+        [
+          23,
+          1
+        ]
+      ],
+      "A": "12720",
+      "D": "553",
+      "curve_coefficients": [
+        "0",
+        "12720",
+        "0",
+        "7034160",
+        "3889890480"
+      ],
+      "observed_matches": 1,
+      "max_coefficient_bits": 32
+    },
+    {
+      "priority": 60,
+      "batch": "fresh-20260923",
+      "N": "12",
+      "factors": [
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "A": "5080",
+      "D": "3352",
+      "curve_coefficients": [
+        "0",
+        "5080",
+        "0",
+        "17028160",
+        "57078392320"
+      ],
+      "observed_matches": 1,
+      "max_coefficient_bits": 36
+    },
+    {
+      "priority": 61,
+      "batch": "fresh-20260923",
+      "N": "67",
+      "factors": [
+        [
+          67,
+          1
+        ]
+      ],
+      "A": "305320",
+      "D": "4557",
+      "curve_coefficients": [
+        "0",
+        "305320",
+        "0",
+        "1391343240",
+        "6340351144680"
+      ],
+      "observed_matches": 1,
+      "max_coefficient_bits": 43
+    },
+    {
+      "priority": 62,
+      "batch": "fresh-20260923",
+      "N": "83",
+      "factors": [
+        [
+          83,
+          1
+        ]
+      ],
+      "A": "578760",
+      "D": "6973",
+      "curve_coefficients": [
+        "0",
+        "578760",
+        "0",
+        "4035693480",
+        "28140890636040"
+      ],
+      "observed_matches": 1,
+      "max_coefficient_bits": 45
+    },
+    {
+      "priority": 63,
+      "batch": "fresh-20260923",
+      "N": "89",
+      "factors": [
+        [
+          89,
+          1
+        ]
+      ],
+      "A": "712980",
+      "D": "8011",
+      "curve_coefficients": [
+        "0",
+        "712980",
+        "0",
+        "5711682780",
+        "45756290750580"
+      ],
+      "observed_matches": 1,
+      "max_coefficient_bits": 46
+    },
+    {
+      "priority": 64,
+      "batch": "fresh-20260924",
+      "N": "18",
+      "factors": [
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "A": "16395",
+      "D": "10563",
+      "curve_coefficients": [
+        "0",
+        "16395",
+        "0",
+        "173180385",
+        "1829304406755"
+      ],
+      "observed_matches": 2,
+      "max_coefficient_bits": 41
+    },
+    {
+      "priority": 65,
+      "batch": "fresh-20260924",
+      "N": "1093",
+      "factors": [
+        [
+          1093,
+          1
+        ]
+      ],
+      "A": "1306947100",
+      "D": "1195743",
+      "curve_coefficients": [
+        "0",
+        "1306947100",
+        "0",
+        "1562772846195300",
+        "1868674691428106607900"
+      ],
+      "observed_matches": 2,
+      "max_coefficient_bits": 71
+    },
+    {
+      "priority": 66,
+      "batch": "fresh-20260924",
+      "N": "252",
+      "factors": [
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          7,
+          1
+        ]
+      ],
+      "A": "55524400",
+      "D": "39521392",
+      "curve_coefficients": [
+        "0",
+        "55524400",
+        "0",
+        "2194401577964800",
+        "86725804968165423001600"
+      ],
+      "observed_matches": 2,
+      "max_coefficient_bits": 77
+    },
+    {
+      "priority": 67,
+      "batch": "fresh-20260924",
+      "N": "393",
+      "factors": [
+        [
+          3,
+          1
+        ],
+        [
+          131,
+          1
+        ]
+      ],
+      "A": "90615360",
+      "D": "29916903",
+      "curve_coefficients": [
+        "0",
+        "90615360",
+        "0",
+        "2710930935430080",
+        "81102657834960966642240"
+      ],
+      "observed_matches": 2,
+      "max_coefficient_bits": 77
+    },
+    {
+      "priority": 68,
+      "batch": "fresh-20260924",
+      "N": "441",
+      "factors": [
+        [
+          3,
+          2
+        ],
+        [
+          7,
+          2
+        ]
+      ],
+      "A": "150021901",
+      "D": "64255780",
+      "curve_coefficients": [
+        "0",
+        "150021901",
+        "0",
+        "9639774265837780",
+        "619411214475333907368400"
+      ],
+      "observed_matches": 2,
+      "max_coefficient_bits": 80
+    },
+    {
+      "priority": 69,
+      "batch": "fresh-20260924",
+      "N": "532",
+      "factors": [
+        [
+          2,
+          2
+        ],
+        [
+          7,
+          1
+        ],
+        [
+          19,
+          1
+        ]
+      ],
+      "A": "367792000",
+      "D": "217223232",
+      "curve_coefficients": [
+        "0",
+        "367792000",
+        "0",
+        "79892966943744000",
+        "17354608493589233860608000"
+      ],
+      "observed_matches": 2,
+      "max_coefficient_bits": 84
+    },
+    {
+      "priority": 70,
+      "batch": "fresh-20260924",
+      "N": "44",
+      "factors": [
+        [
+          2,
+          2
+        ],
+        [
+          11,
+          1
+        ]
+      ],
+      "A": "185928",
+      "D": "100744",
+      "curve_coefficients": [
+        "0",
+        "185928",
+        "0",
+        "18731130432",
+        "1887049004241408"
+      ],
+      "observed_matches": 1,
+      "max_coefficient_bits": 51
+    },
+    {
+      "priority": 71,
+      "batch": "fresh-20260924",
+      "N": "149",
+      "factors": [
+        [
+          149,
+          1
+        ]
+      ],
+      "A": "3330300",
+      "D": "22351",
+      "curve_coefficients": [
+        "0",
+        "3330300",
+        "0",
+        "74435535300",
+        "1663708649490300"
+      ],
+      "observed_matches": 1,
+      "max_coefficient_bits": 51
+    },
+    {
+      "priority": 72,
+      "batch": "fresh-20260924",
+      "N": "197",
+      "factors": [
+        [
+          197,
+          1
+        ]
+      ],
+      "A": "7684380",
+      "D": "39007",
+      "curve_coefficients": [
+        "0",
+        "7684380",
+        "0",
+        "299744610660",
+        "11692138028014620"
+      ],
+      "observed_matches": 1,
+      "max_coefficient_bits": 54
+    },
+    {
+      "priority": 73,
+      "batch": "fresh-20260924",
+      "N": "223",
+      "factors": [
+        [
+          223,
+          1
+        ]
+      ],
+      "A": "11139520",
+      "D": "49953",
+      "curve_coefficients": [
+        "0",
+        "11139520",
+        "0",
+        "556452442560",
+        "27796468863199680"
+      ],
+      "observed_matches": 1,
+      "max_coefficient_bits": 55
+    },
+    {
+      "priority": 74,
+      "batch": "fresh-20260924",
+      "N": "81",
+      "factors": [
+        [
+          3,
+          4
+        ]
+      ],
+      "A": "797161",
+      "D": "265720",
+      "curve_coefficients": [
+        "0",
+        "797161",
+        "0",
+        "211821620920",
+        "56285241110862400"
+      ],
+      "observed_matches": 1,
+      "max_coefficient_bits": 56
+    },
+    {
+      "priority": 75,
+      "batch": "fresh-20260924",
+      "N": "239",
+      "factors": [
+        [
+          239,
+          1
+        ]
+      ],
+      "A": "13709280",
+      "D": "57361",
+      "curve_coefficients": [
+        "0",
+        "13709280",
+        "0",
+        "786378010080",
+        "45107429036198880"
+      ],
+      "observed_matches": 1,
+      "max_coefficient_bits": 56
+    },
+    {
+      "priority": 76,
+      "batch": "fresh-20260924",
+      "N": "251",
+      "factors": [
+        [
+          251,
+          1
+        ]
+      ],
+      "A": "15876504",
+      "D": "63253",
+      "curve_coefficients": [
+        "0",
+        "15876504",
+        "0",
+        "1004236507512",
+        "63520971809656536"
+      ],
+      "observed_matches": 1,
+      "max_coefficient_bits": 56
+    },
+    {
+      "priority": 77,
+      "batch": "fresh-20260924",
+      "N": "68",
+      "factors": [
+        [
+          2,
+          2
+        ],
+        [
+          17,
+          1
+        ]
+      ],
+      "A": "662940",
+      "D": "348508",
+      "curve_coefficients": [
+        "0",
+        "662940",
+        "0",
+        "231039893520",
+        "80519251210868160"
+      ],
+      "observed_matches": 1,
+      "max_coefficient_bits": 57
+    },
+    {
+      "priority": 78,
+      "batch": "fresh-20260924",
+      "N": "87",
+      "factors": [
+        [
+          3,
+          1
+        ],
+        [
+          29,
+          1
+        ]
+      ],
+      "A": "1010400",
+      "D": "351897",
+      "curve_coefficients": [
+        "0",
+        "1010400",
+        "0",
+        "355556728800",
+        "125119346194533600"
+      ],
+      "observed_matches": 1,
+      "max_coefficient_bits": 57
+    },
+    {
+      "priority": 79,
+      "batch": "fresh-20260924",
+      "N": "76",
+      "factors": [
+        [
+          2,
+          2
+        ],
+        [
+          19,
+          1
+        ]
+      ],
+      "A": "919480",
+      "D": "480504",
+      "curve_coefficients": [
+        "0",
+        "919480",
+        "0",
+        "441813817920",
+        "212293306765831680"
+      ],
+      "observed_matches": 1,
+      "max_coefficient_bits": 58
+    },
+    {
+      "priority": 80,
+      "batch": "fresh-20260924",
+      "N": "119",
+      "factors": [
+        [
+          7,
+          1
+        ],
+        [
+          17,
+          1
+        ]
+      ],
+      "A": "2088000",
+      "D": "402841",
+      "curve_coefficients": [
+        "0",
+        "2088000",
+        "0",
+        "841132008000",
+        "338842459234728000"
+      ],
+      "observed_matches": 1,
+      "max_coefficient_bits": 59
+    },
+    {
+      "priority": 81,
+      "batch": "fresh-20260924",
+      "N": "125",
+      "factors": [
+        [
+          5,
+          3
+        ]
+      ],
+      "A": "2441406",
+      "D": "488281",
+      "curve_coefficients": [
+        "0",
+        "2441406",
+        "0",
+        "1192092163086",
+        "582075953483795166"
+      ],
+      "observed_matches": 1,
+      "max_coefficient_bits": 60
+    },
+    {
+      "priority": 82,
+      "batch": "fresh-20260925",
+      "N": "245",
+      "factors": [
+        [
+          5,
+          1
+        ],
+        [
+          7,
+          2
+        ]
+      ],
+      "A": "21412092",
+      "D": "6705967",
+      "curve_coefficients": [
+        "0",
+        "21412092",
+        "0",
+        "143588782352964",
+        "962901636029158936188"
+      ],
+      "observed_matches": 6,
+      "uncovered_matches": 6,
+      "latest_run_uncovered_matches": 3,
+      "max_coefficient_bits": 70
+    },
+    {
+      "priority": 83,
+      "batch": "fresh-20260925",
+      "N": "185",
+      "factors": [
+        [
+          5,
+          1
+        ],
+        [
+          37,
+          1
+        ]
+      ],
+      "A": "8121360",
+      "D": "1789735",
+      "curve_coefficients": [
+        "0",
+        "8121360",
+        "0",
+        "14535082239600",
+        "26013945412090506000"
+      ],
+      "observed_matches": 5,
+      "uncovered_matches": 5,
+      "latest_run_uncovered_matches": 3,
+      "max_coefficient_bits": 65
+    },
+    {
+      "priority": 84,
+      "batch": "fresh-20260925",
+      "N": "235",
+      "factors": [
+        [
+          5,
+          1
+        ],
+        [
+          47,
+          1
+        ]
+      ],
+      "A": "16548480",
+      "D": "3570605",
+      "curve_coefficients": [
+        "0",
+        "16548480",
+        "0",
+        "59088085430400",
+        "210980213278213392000"
+      ],
+      "observed_matches": 5,
+      "uncovered_matches": 5,
+      "latest_run_uncovered_matches": 4,
+      "max_coefficient_bits": 68
+    },
+    {
+      "priority": 85,
+      "batch": "fresh-20260925",
+      "N": "513",
+      "factors": [
+        [
+          3,
+          3
+        ],
+        [
+          19,
+          1
+        ]
+      ],
+      "A": "213753760",
+      "D": "78748063",
+      "curve_coefficients": [
+        "0",
+        "213753760",
+        "0",
+        "16832694558966880",
+        "1325542091589281081153440"
+      ],
+      "observed_matches": 4,
+      "uncovered_matches": 4,
+      "latest_run_uncovered_matches": 3,
+      "max_coefficient_bits": 81
+    },
+    {
+      "priority": 86,
+      "batch": "fresh-20260925",
+      "N": "160",
+      "factors": [
+        [
+          2,
+          5
+        ],
+        [
+          5,
+          1
+        ]
+      ],
+      "A": "10223460",
+      "D": "6127460",
+      "curve_coefficients": [
+        "0",
+        "10223460",
+        "0",
+        "62643842211600",
+        "383847637397890536000"
+      ],
+      "observed_matches": 3,
+      "uncovered_matches": 3,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 69
+    },
+    {
+      "priority": 87,
+      "batch": "fresh-20260925",
+      "N": "219",
+      "factors": [
+        [
+          3,
+          1
+        ],
+        [
+          73,
+          1
+        ]
+      ],
+      "A": "15776800",
+      "D": "5273341",
+      "curve_coefficients": [
+        "0",
+        "15776800",
+        "0",
+        "83196446288800",
+        "438723231269026880800"
+      ],
+      "observed_matches": 3,
+      "uncovered_matches": 3,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 69
+    },
+    {
+      "priority": 88,
+      "batch": "fresh-20260925",
+      "N": "247",
+      "factors": [
+        [
+          13,
+          1
+        ],
+        [
+          19,
+          1
+        ]
+      ],
+      "A": "17231200",
+      "D": "2161977",
+      "curve_coefficients": [
+        "0",
+        "17231200",
+        "0",
+        "37253458082400",
+        "80541119544612904800"
+      ],
+      "observed_matches": 3,
+      "uncovered_matches": 3,
+      "latest_run_uncovered_matches": 2,
+      "max_coefficient_bits": 67
+    },
+    {
+      "priority": 89,
+      "batch": "fresh-20260925",
+      "N": "351",
+      "factors": [
+        [
+          3,
+          3
+        ],
+        [
+          13,
+          1
+        ]
+      ],
+      "A": "70267120",
+      "D": "27023569",
+      "curve_coefficients": [
+        "0",
+        "70267120",
+        "0",
+        "1898868365751280",
+        "51314200303796951918320"
+      ],
+      "observed_matches": 3,
+      "uncovered_matches": 3,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 76
+    },
+    {
+      "priority": 90,
+      "batch": "fresh-20260925",
+      "N": "100",
+      "factors": [
+        [
+          2,
+          2
+        ],
+        [
+          5,
+          2
+        ]
+      ],
+      "A": "2480437",
+      "D": "1480437",
+      "curve_coefficients": [
+        "0",
+        "2480437",
+        "0",
+        "3672130710969",
+        "5436358173354813453"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 63
+    },
+    {
+      "priority": 91,
+      "batch": "fresh-20260925",
+      "N": "105",
+      "factors": [
+        [
+          3,
+          1
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          7,
+          1
+        ]
+      ],
+      "A": "2496000",
+      "D": "1338375",
+      "curve_coefficients": [
+        "0",
+        "2496000",
+        "0",
+        "3340584000000",
+        "4470954111000000000"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 62
+    },
+    {
+      "priority": 92,
+      "batch": "fresh-20260925",
+      "N": "116",
+      "factors": [
+        [
+          2,
+          2
+        ],
+        [
+          29,
+          1
+        ]
+      ],
+      "A": "3208020",
+      "D": "1647124",
+      "curve_coefficients": [
+        "0",
+        "3208020",
+        "0",
+        "5284006734480",
+        "8703414308523635520"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 63
+    },
+    {
+      "priority": 93,
+      "batch": "fresh-20260925",
+      "N": "120",
+      "factors": [
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          5,
+          1
+        ]
+      ],
+      "A": "6383520",
+      "D": "4655520",
+      "curve_coefficients": [
+        "0",
+        "6383520",
+        "0",
+        "29718605030400",
+        "138355560091127808000"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 67
+    },
+    {
+      "priority": 94,
+      "batch": "fresh-20260925",
+      "N": "121",
+      "factors": [
+        [
+          11,
+          2
+        ]
+      ],
+      "A": "1948717",
+      "D": "177156",
+      "curve_coefficients": [
+        "0",
+        "1948717",
+        "0",
+        "345226908852",
+        "61159018264584912"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 56
+    },
+    {
+      "priority": 95,
+      "batch": "fresh-20260925",
+      "N": "124",
+      "factors": [
+        [
+          2,
+          2
+        ],
+        [
+          31,
+          1
+        ]
+      ],
+      "A": "3909568",
+      "D": "2002944",
+      "curve_coefficients": [
+        "0",
+        "3909568",
+        "0",
+        "7830645768192",
+        "15684344957525557248"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 64
+    },
+    {
+      "priority": 96,
+      "batch": "fresh-20260925",
+      "N": "127",
+      "factors": [
+        [
+          127,
+          1
+        ]
+      ],
+      "A": "2064640",
+      "D": "16257",
+      "curve_coefficients": [
+        "0",
+        "2064640",
+        "0",
+        "33564852480",
+        "545663806767360"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 49
+    },
+    {
+      "priority": 97,
+      "batch": "fresh-20260925",
+      "N": "136",
+      "factors": [
+        [
+          2,
+          3
+        ],
+        [
+          17,
+          1
+        ]
+      ],
+      "A": "5340060",
+      "D": "2824604",
+      "curve_coefficients": [
+        "0",
+        "5340060",
+        "0",
+        "15083554836240",
+        "42605069324662848960"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 66
+    },
+    {
+      "priority": 98,
+      "batch": "fresh-20260925",
+      "N": "143",
+      "factors": [
+        [
+          11,
+          1
+        ],
+        [
+          13,
+          1
+        ]
+      ],
+      "A": "3484320",
+      "D": "560113",
+      "curve_coefficients": [
+        "0",
+        "3484320",
+        "0",
+        "1951612928160",
+        "1093123772030482080"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 60
+    },
+    {
+      "priority": 99,
+      "batch": "fresh-20260925",
+      "N": "145",
+      "factors": [
+        [
+          5,
+          1
+        ],
+        [
+          29,
+          1
+        ]
+      ],
+      "A": "3940560",
+      "D": "891935",
+      "curve_coefficients": [
+        "0",
+        "3940560",
+        "0",
+        "3514723383600",
+        "3134904801151266000"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 62
+    },
+    {
+      "priority": 100,
+      "batch": "fresh-20260925-next-1",
+      "N": "163",
+      "factors": [
+        [
+          163,
+          1
+        ]
+      ],
+      "A": "4357480",
+      "D": "26733",
+      "curve_coefficients": [
+        "0",
+        "4357480",
+        "0",
+        "116488512840",
+        "3114087413751720"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 52
+    },
+    {
+      "priority": 101,
+      "batch": "fresh-20260925-next-1",
+      "N": "177",
+      "factors": [
+        [
+          3,
+          1
+        ],
+        [
+          59,
+          1
+        ]
+      ],
+      "A": "8356800",
+      "D": "2811567",
+      "curve_coefficients": [
+        "0",
+        "8356800",
+        "0",
+        "23495703105600",
+        "66059743493502475200"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 66
+    },
+    {
+      "priority": 102,
+      "batch": "fresh-20260925-next-1",
+      "N": "195",
+      "factors": [
+        [
+          3,
+          1
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          13,
+          1
+        ]
+      ],
+      "A": "14851200",
+      "D": "7436325",
+      "curve_coefficients": [
+        "0",
+        "14851200",
+        "0",
+        "110438349840000",
+        "821255461873938000000"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 70
+    },
+    {
+      "priority": 103,
+      "batch": "fresh-20260925-next-1",
+      "N": "199",
+      "factors": [
+        [
+          199,
+          1
+        ]
+      ],
+      "A": "7920400",
+      "D": "39801",
+      "curve_coefficients": [
+        "0",
+        "7920400",
+        "0",
+        "315239840400",
+        "12546860887760400"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 54
+    },
+    {
+      "priority": 104,
+      "batch": "fresh-20260925-next-1",
+      "N": "259",
+      "factors": [
+        [
+          7,
+          1
+        ],
+        [
+          37,
+          1
+        ]
+      ],
+      "A": "20824000",
+      "D": "3450021",
+      "curve_coefficients": [
+        "0",
+        "20824000",
+        "0",
+        "71843237304000",
+        "247860677406783384000"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 68
+    },
+    {
+      "priority": 105,
+      "batch": "fresh-20260925-next-1",
+      "N": "280",
+      "factors": [
+        [
+          2,
+          3
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          7,
+          1
+        ]
+      ],
+      "A": "63835200",
+      "D": "41883200",
+      "curve_coefficients": [
+        "0",
+        "63835200",
+        "0",
+        "2673622448640000",
+        "111979863740878848000000"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 2,
+      "max_coefficient_bits": 77
+    },
+    {
+      "priority": 106,
+      "batch": "fresh-20260925-next-1",
+      "N": "281",
+      "factors": [
+        [
+          281,
+          1
+        ]
+      ],
+      "A": "22267284",
+      "D": "79243",
+      "curve_coefficients": [
+        "0",
+        "22267284",
+        "0",
+        "1764526386012",
+        "139826364406748916"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 57
+    },
+    {
+      "priority": 107,
+      "batch": "fresh-20260925-next-1",
+      "N": "293",
+      "factors": [
+        [
+          293,
+          1
+        ]
+      ],
+      "A": "25239900",
+      "D": "86143",
+      "curve_coefficients": [
+        "0",
+        "25239900",
+        "0",
+        "2174240705700",
+        "187295617111115100"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 58
+    },
+    {
+      "priority": 108,
+      "batch": "fresh-20260925-next-1",
+      "N": "376",
+      "factors": [
+        [
+          2,
+          3
+        ],
+        [
+          47,
+          1
+        ]
+      ],
+      "A": "108519840",
+      "D": "55362464",
+      "curve_coefficients": [
+        "0",
+        "108519840",
+        "0",
+        "6007925735285760",
+        "332613572234431417712640"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 79
+    },
+    {
+      "priority": 109,
+      "batch": "fresh-20260925-next-1",
+      "N": "392",
+      "factors": [
+        [
+          2,
+          3
+        ],
+        [
+          7,
+          2
+        ]
+      ],
+      "A": "140413911",
+      "D": "80177623",
+      "curve_coefficients": [
+        "0",
+        "140413911",
+        "0",
+        "11258053620113553",
+        "902643978867249669624519"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 80
+    },
+    {
+      "priority": 110,
+      "batch": "fresh-20260925-next-1",
+      "N": "403",
+      "factors": [
+        [
+          13,
+          1
+        ],
+        [
+          31,
+          1
+        ]
+      ],
+      "A": "73265920",
+      "D": "7815093",
+      "curve_coefficients": [
+        "0",
+        "73265920",
+        "0",
+        "572579978530560",
+        "4474765782154329742080"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 72
+    },
+    {
+      "priority": 111,
+      "batch": "fresh-20260925-next-1",
+      "N": "419",
+      "factors": [
+        [
+          419,
+          1
+        ]
+      ],
+      "A": "73736040",
+      "D": "175981",
+      "curve_coefficients": [
+        "0",
+        "73736040",
+        "0",
+        "12976142055240",
+        "2283554455023190440"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 61
+    },
+    {
+      "priority": 112,
+      "batch": "fresh-20260925-next-1",
+      "N": "427",
+      "factors": [
+        [
+          7,
+          1
+        ],
+        [
+          61,
+          1
+        ]
+      ],
+      "A": "92305600",
+      "D": "14451117",
+      "curve_coefficients": [
+        "0",
+        "92305600",
+        "0",
+        "1333919025355200",
+        "19276619903933961758400"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 75
+    },
+    {
+      "priority": 113,
+      "batch": "fresh-20260925-next-1",
+      "N": "469",
+      "factors": [
+        [
+          7,
+          1
+        ],
+        [
+          67,
+          1
+        ]
+      ],
+      "A": "122128000",
+      "D": "18966291",
+      "curve_coefficients": [
+        "0",
+        "122128000",
+        "0",
+        "2316315187248000",
+        "43931907889065057168000"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 76
+    },
+    {
+      "priority": 114,
+      "batch": "fresh-20260925-next-1",
+      "N": "565",
+      "factors": [
+        [
+          5,
+          1
+        ],
+        [
+          113,
+          1
+        ]
+      ],
+      "A": "227101680",
+      "D": "46739555",
+      "curve_coefficients": [
+        "0",
+        "227101680",
+        "0",
+        "10614631462952400",
+        "496123151067394162182000"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 79
+    },
+    {
+      "priority": 115,
+      "batch": "fresh-20260925-next-1",
+      "N": "763",
+      "factors": [
+        [
+          7,
+          1
+        ],
+        [
+          109,
+          1
+        ]
+      ],
+      "A": "522808000",
+      "D": "78613053",
+      "curve_coefficients": [
+        "0",
+        "522808000",
+        "0",
+        "41099533012824000",
+        "3230959767012382791672000"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 82
+    },
+    {
+      "priority": 116,
+      "batch": "fresh-20260925-next-1",
+      "N": "776",
+      "factors": [
+        [
+          2,
+          3
+        ],
+        [
+          97,
+          1
+        ]
+      ],
+      "A": "943390140",
+      "D": "476101564",
+      "curve_coefficients": [
+        "0",
+        "943390140",
+        "0",
+        "449149521116178960",
+        "213840789473263828559893440"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 88
+    },
+    {
+      "priority": 117,
+      "batch": "fresh-20260925-next-1",
+      "N": "812",
+      "factors": [
+        [
+          2,
+          2
+        ],
+        [
+          7,
+          1
+        ],
+        [
+          29,
+          1
+        ]
+      ],
+      "A": "1283208000",
+      "D": "747820672",
+      "curve_coefficients": [
+        "0",
+        "1283208000",
+        "0",
+        "959609468875776000",
+        "717615797872245892841472000"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 90
+    },
+    {
+      "priority": 118,
+      "batch": "fresh-20260925-next-2",
+      "N": "40",
+      "factors": [
+        [
+          2,
+          3
+        ],
+        [
+          5,
+          1
+        ]
+      ],
+      "A": "159588",
+      "D": "95588",
+      "curve_coefficients": [
+        "0",
+        "159588",
+        "0",
+        "15254697744",
+        "1458166047953472"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 51
+    },
+    {
+      "priority": 119,
+      "batch": "fresh-20260925-next-2",
+      "N": "45",
+      "factors": [
+        [
+          3,
+          2
+        ],
+        [
+          5,
+          1
+        ]
+      ],
+      "A": "170508",
+      "D": "79383",
+      "curve_coefficients": [
+        "0",
+        "170508",
+        "0",
+        "13535436564",
+        "1074483560760012"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 50
+    },
+    {
+      "priority": 120,
+      "batch": "fresh-20260925-next-2",
+      "N": "50",
+      "factors": [
+        [
+          2,
+          1
+        ],
+        [
+          5,
+          2
+        ]
+      ],
+      "A": "292965",
+      "D": "167965",
+      "curve_coefficients": [
+        "0",
+        "292965",
+        "0",
+        "49207866225",
+        "8265199250482125"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 53
+    },
+    {
+      "priority": 121,
+      "batch": "fresh-20260925-next-2",
+      "N": "75",
+      "factors": [
+        [
+          3,
+          1
+        ],
+        [
+          5,
+          2
+        ]
+      ],
+      "A": "781240",
+      "D": "359365",
+      "curve_coefficients": [
+        "0",
+        "781240",
+        "0",
+        "280750312600",
+        "100891836087499000"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 57
+    },
+    {
+      "priority": 122,
+      "batch": "fresh-20260925-next-2",
+      "N": "84",
+      "factors": [
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          7,
+          1
+        ]
+      ],
+      "A": "2032000",
+      "D": "1439296",
+      "curve_coefficients": [
+        "0",
+        "2032000",
+        "0",
+        "2924649472000",
+        "4209436286451712000"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 62
+    },
+    {
+      "priority": 123,
+      "batch": "fresh-20260925-next-2",
+      "N": "88",
+      "factors": [
+        [
+          2,
+          3
+        ],
+        [
+          11,
+          1
+        ]
+      ],
+      "A": "1497672",
+      "D": "816200",
+      "curve_coefficients": [
+        "0",
+        "1497672",
+        "0",
+        "1222399886400",
+        "997722787279680000"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 60
+    },
+    {
+      "priority": 124,
+      "batch": "fresh-20260925-next-2",
+      "N": "108",
+      "factors": [
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ],
+      "A": "3749548",
+      "D": "2489836",
+      "curve_coefficients": [
+        "0",
+        "3749548",
+        "0",
+        "9335759594128",
+        "23244510324805283008"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 65
+    },
+    {
+      "priority": 125,
+      "batch": "fresh-20260925-next-2",
+      "N": "113",
+      "factors": [
+        [
+          113,
+          1
+        ]
+      ],
+      "A": "1455780",
+      "D": "12883",
+      "curve_coefficients": [
+        "0",
+        "1455780",
+        "0",
+        "18754813740",
+        "241618265412420"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 48
+    },
+    {
+      "priority": 126,
+      "batch": "fresh-20260925-next-2",
+      "N": "128",
+      "factors": [
+        [
+          2,
+          7
+        ]
+      ],
+      "A": "4194303",
+      "D": "2097151",
+      "curve_coefficients": [
+        "0",
+        "4194303",
+        "0",
+        "8796086730753",
+        "18446722083485384703"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 64
+    },
+    {
+      "priority": 127,
+      "batch": "fresh-20260925-next-2",
+      "N": "131",
+      "factors": [
+        [
+          131,
+          1
+        ]
+      ],
+      "A": "2265384",
+      "D": "17293",
+      "curve_coefficients": [
+        "0",
+        "2265384",
+        "0",
+        "39175285512",
+        "677458212359016"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 50
+    },
+    {
+      "priority": 128,
+      "batch": "fresh-20260925-next-2",
+      "N": "139",
+      "factors": [
+        [
+          139,
+          1
+        ]
+      ],
+      "A": "2705080",
+      "D": "19461",
+      "curve_coefficients": [
+        "0",
+        "2705080",
+        "0",
+        "52643561880",
+        "1024496357746680"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 50
+    },
+    {
+      "priority": 129,
+      "batch": "fresh-20260925-next-2",
+      "N": "151",
+      "factors": [
+        [
+          151,
+          1
+        ]
+      ],
+      "A": "3465904",
+      "D": "22953",
+      "curve_coefficients": [
+        "0",
+        "3465904",
+        "0",
+        "79552894512",
+        "1825977587733936"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 51
+    },
+    {
+      "priority": 130,
+      "batch": "fresh-20260925-next-2",
+      "N": "167",
+      "factors": [
+        [
+          167,
+          1
+        ]
+      ],
+      "A": "4685520",
+      "D": "28057",
+      "curve_coefficients": [
+        "0",
+        "4685520",
+        "0",
+        "131461634640",
+        "3688419083094480"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 52
+    },
+    {
+      "priority": 131,
+      "batch": "fresh-20260925-next-2",
+      "N": "172",
+      "factors": [
+        [
+          2,
+          2
+        ],
+        [
+          43,
+          1
+        ]
+      ],
+      "A": "10337800",
+      "D": "5249352",
+      "curve_coefficients": [
+        "0",
+        "10337800",
+        "0",
+        "54266751105600",
+        "284865278449683571200"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 68
+    },
+    {
+      "priority": 132,
+      "batch": "fresh-20260925-next-2",
+      "N": "180",
+      "factors": [
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          5,
+          1
+        ]
+      ],
+      "A": "21654516",
+      "D": "15822516",
+      "curve_coefficients": [
+        "0",
+        "21654516",
+        "0",
+        "342628925882256",
+        "5421251661834809676096"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 73
+    },
+    {
+      "priority": 133,
+      "batch": "fresh-20260925-next-2",
+      "N": "183",
+      "factors": [
+        [
+          3,
+          1
+        ],
+        [
+          61,
+          1
+        ]
+      ],
+      "A": "9230560",
+      "D": "3102073",
+      "curve_coefficients": [
+        "0",
+        "9230560",
+        "0",
+        "28633870950880",
+        "88824357962209174240"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 67
+    },
+    {
+      "priority": 134,
+      "batch": "fresh-20260925-next-2",
+      "N": "187",
+      "factors": [
+        [
+          11,
+          1
+        ],
+        [
+          17,
+          1
+        ]
+      ],
+      "A": "7642080",
+      "D": "1102877",
+      "curve_coefficients": [
+        "0",
+        "7642080",
+        "0",
+        "8428274264160",
+        "9295349835633988320"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 64
+    },
+    {
+      "priority": 135,
+      "batch": "fresh-20260925-next-2",
+      "N": "200",
+      "factors": [
+        [
+          2,
+          3
+        ],
+        [
+          5,
+          2
+        ]
+      ],
+      "A": "19980213",
+      "D": "11980213",
+      "curve_coefficients": [
+        "0",
+        "19980213",
+        "0",
+        "239367207525369",
+        "2867670131369123523597"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 72
+    },
+    {
+      "priority": 136,
+      "batch": "fresh-20260925-next-3",
+      "N": "929",
+      "factors": [
+        [
+          929,
+          1
+        ]
+      ],
+      "A": "802629060",
+      "D": "863971",
+      "curve_coefficients": [
+        "0",
+        "802629060",
+        "0",
+        "693448231597260",
+        "599119162101316319460"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 70
+    },
+    {
+      "priority": 137,
+      "batch": "fresh-20260925-next-3",
+      "N": "1211",
+      "factors": [
+        [
+          7,
+          1
+        ],
+        [
+          173,
+          1
+        ]
+      ],
+      "A": "2083128000",
+      "D": "307171069",
+      "curve_coefficients": [
+        "0",
+        "2083128000",
+        "0",
+        "639876654623832000",
+        "196551596028946268316408000"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 88
+    },
+    {
+      "priority": 138,
+      "batch": "fresh-20260925-next-3",
+      "N": "1708",
+      "factors": [
+        [
+          2,
+          2
+        ],
+        [
+          7,
+          1
+        ],
+        [
+          61,
+          1
+        ]
+      ],
+      "A": "11722811200",
+      "D": "6740124288",
+      "curve_coefficients": [
+        "0",
+        "11722811200",
+        "0",
+        "79013204492758425600",
+        "532558818674351784503200972800"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 99
+    },
+    {
+      "priority": 139,
+      "batch": "fresh-20260925-next-3",
+      "N": "1829",
+      "factors": [
+        [
+          31,
+          1
+        ],
+        [
+          59,
+          1
+        ]
+      ],
+      "A": "6431393280",
+      "D": "312947491",
+      "curve_coefficients": [
+        "0",
+        "6431393280",
+        "0",
+        "2012688390610260480",
+        "629865782006308976072455680"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 90
+    },
+    {
+      "priority": 140,
+      "batch": "fresh-20260925-next-3",
+      "N": "1835",
+      "factors": [
+        [
+          5,
+          1
+        ],
+        [
+          367,
+          1
+        ]
+      ],
+      "A": "7732283520",
+      "D": "1553425645",
+      "curve_coefficients": [
+        "0",
+        "7732283520",
+        "0",
+        "12011527514378870400",
+        "18659014876459243525491408000"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 94
+    },
+    {
+      "priority": 141,
+      "batch": "fresh-20260925-next-3",
+      "N": "1917",
+      "factors": [
+        [
+          3,
+          3
+        ],
+        [
+          71,
+          1
+        ]
+      ],
+      "A": "10717920576",
+      "D": "3673158363",
+      "curve_coefficients": [
+        "0",
+        "10717920576",
+        "0",
+        "39368619597704177088",
+        "144607174315072793670820186944"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 97
+    },
+    {
+      "priority": 142,
+      "batch": "fresh-20260925-next-3",
+      "N": "1953",
+      "factors": [
+        [
+          3,
+          2
+        ],
+        [
+          7,
+          1
+        ],
+        [
+          31,
+          1
+        ]
+      ],
+      "A": "13458764800",
+      "D": "6009614623",
+      "curve_coefficients": [
+        "0",
+        "13458764800",
+        "0",
+        "80881989749597670400",
+        "486069588336518268402574259200"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 99
+    },
+    {
+      "priority": 143,
+      "batch": "fresh-20260925-next-3",
+      "N": "2059",
+      "factors": [
+        [
+          29,
+          1
+        ],
+        [
+          71,
+          1
+        ]
+      ],
+      "A": "9169986240",
+      "D": "440894861",
+      "curve_coefficients": [
+        "0",
+        "9169986240",
+        "0",
+        "4042999808656712640",
+        "1782537838660727916129743040"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 91
+    },
+    {
+      "priority": 144,
+      "batch": "fresh-20260925-next-3",
+      "N": "2209",
+      "factors": [
+        [
+          47,
+          2
+        ]
+      ],
+      "A": "11013546097",
+      "D": "234330768",
+      "curve_coefficients": [
+        "0",
+        "11013546097",
+        "0",
+        "2580812715313412496",
+        "604763825643557310888476928"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 89
+    },
+    {
+      "priority": 145,
+      "batch": "fresh-20260925-next-3",
+      "N": "2320",
+      "factors": [
+        [
+          2,
+          4
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          29,
+          1
+        ]
+      ],
+      "A": "32277126960",
+      "D": "19789958960",
+      "curve_coefficients": [
+        "0",
+        "32277126960",
+        "0",
+        "638763017885109561600",
+        "12641093909112064219167591936000"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 2,
+      "max_coefficient_bits": 104
+    },
+    {
+      "priority": 146,
+      "batch": "fresh-20260925-next-3",
+      "N": "2356",
+      "factors": [
+        [
+          2,
+          2
+        ],
+        [
+          19,
+          1
+        ],
+        [
+          31,
+          1
+        ]
+      ],
+      "A": "28305272320",
+      "D": "15227738304",
+      "curve_coefficients": [
+        "0",
+        "28305272320",
+        "0",
+        "431025279512414945280",
+        "6563540158823507505782320005120"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 103
+    },
+    {
+      "priority": 147,
+      "batch": "fresh-20260925-next-3",
+      "N": "2527",
+      "factors": [
+        [
+          7,
+          1
+        ],
+        [
+          19,
+          2
+        ]
+      ],
+      "A": "19863816400",
+      "D": "3727079217",
+      "curve_coefficients": [
+        "0",
+        "19863816400",
+        "0",
+        "74034017274743758800",
+        "275930647135716442423940859600"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 98
+    },
+    {
+      "priority": 148,
+      "batch": "fresh-20260925-next-3",
+      "N": "2772",
+      "factors": [
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          7,
+          1
+        ],
+        [
+          11,
+          1
+        ]
+      ],
+      "A": "81287721600",
+      "D": "59987717952",
+      "curve_coefficients": [
+        "0",
+        "81287721600",
+        "0",
+        "4876264916301498163200",
+        "292516004458327158809087665766400"
+      ],
+      "observed_matches": 2,
+      "uncovered_matches": 2,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 108
+    },
+    {
+      "priority": 149,
+      "batch": "fresh-20260925-next-3",
+      "N": "201",
+      "factors": [
+        [
+          3,
+          1
+        ],
+        [
+          67,
+          1
+        ]
+      ],
+      "A": "12212800",
+      "D": "4092199",
+      "curve_coefficients": [
+        "0",
+        "12212800",
+        "0",
+        "49977207947200",
+        "204516680384323892800"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 68
+    },
+    {
+      "priority": 150,
+      "batch": "fresh-20260925-next-3",
+      "N": "212",
+      "factors": [
+        [
+          2,
+          2
+        ],
+        [
+          53,
+          1
+        ]
+      ],
+      "A": "19270980",
+      "D": "9742852",
+      "curve_coefficients": [
+        "0",
+        "19270980",
+        "0",
+        "187754306034960",
+        "1829262416061322105920"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 71
+    },
+    {
+      "priority": 151,
+      "batch": "fresh-20260925-next-3",
+      "N": "215",
+      "factors": [
+        [
+          5,
+          1
+        ],
+        [
+          43,
+          1
+        ]
+      ],
+      "A": "12698400",
+      "D": "2760025",
+      "curve_coefficients": [
+        "0",
+        "12698400",
+        "0",
+        "35047901460000",
+        "96733084227136500000"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 67
+    },
+    {
+      "priority": 152,
+      "batch": "fresh-20260925-next-3",
+      "N": "216",
+      "factors": [
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          3
+        ]
+      ],
+      "A": "30203052",
+      "D": "20125356",
+      "curve_coefficients": [
+        "0",
+        "30203052",
+        "0",
+        "607847173786512",
+        "12233140766047421998272"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 74
+    },
+    {
+      "priority": 153,
+      "batch": "fresh-20260925-next-3",
+      "N": "217",
+      "factors": [
+        [
+          7,
+          1
+        ],
+        [
+          31,
+          1
+        ]
+      ],
+      "A": "12313600",
+      "D": "2095287",
+      "curve_coefficients": [
+        "0",
+        "12313600",
+        "0",
+        "25800526003200",
+        "54059506727666918400"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 66
+    },
+    {
+      "priority": 154,
+      "batch": "fresh-20260925-next-4",
+      "N": "224",
+      "factors": [
+        [
+          2,
+          5
+        ],
+        [
+          7,
+          1
+        ]
+      ],
+      "A": "26214000",
+      "D": "14974576",
+      "curve_coefficients": [
+        "0",
+        "26214000",
+        "0",
+        "392543535264000",
+        "5878173002119448064000"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 73
+    },
+    {
+      "priority": 155,
+      "batch": "fresh-20260925-next-4",
+      "N": "227",
+      "factors": [
+        [
+          227,
+          1
+        ]
+      ],
+      "A": "11748840",
+      "D": "51757",
+      "curve_coefficients": [
+        "0",
+        "11748840",
+        "0",
+        "608084711880",
+        "31472640432773160"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 55
+    },
+    {
+      "priority": 156,
+      "batch": "fresh-20260925-next-4",
+      "N": "228",
+      "factors": [
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          19,
+          1
+        ]
+      ],
+      "A": "36779200",
+      "D": "24926848",
+      "curve_coefficients": [
+        "0",
+        "36779200",
+        "0",
+        "916789527961600",
+        "22852673211490553036800"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 75
+    },
+    {
+      "priority": 157,
+      "batch": "fresh-20260925-next-4",
+      "N": "242",
+      "factors": [
+        [
+          2,
+          1
+        ],
+        [
+          11,
+          2
+        ]
+      ],
+      "A": "29230755",
+      "D": "15058267",
+      "curve_coefficients": [
+        "0",
+        "29230755",
+        "0",
+        "440164513401585",
+        "6628114766726145153195"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 73
+    },
+    {
+      "priority": 158,
+      "batch": "fresh-20260925-next-4",
+      "N": "249",
+      "factors": [
+        [
+          3,
+          1
+        ],
+        [
+          83,
+          1
+        ]
+      ],
+      "A": "23150400",
+      "D": "7712151",
+      "curve_coefficients": [
+        "0",
+        "23150400",
+        "0",
+        "178539380510400",
+        "1376922661942661870400"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 71
+    },
+    {
+      "priority": 159,
+      "batch": "fresh-20260925-next-4",
+      "N": "256",
+      "factors": [
+        [
+          2,
+          8
+        ]
+      ],
+      "A": "33554431",
+      "D": "16777215",
+      "curve_coefficients": [
+        "0",
+        "33554431",
+        "0",
+        "562949903089665",
+        "9444731558364473982975"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 73
+    },
+    {
+      "priority": 160,
+      "batch": "fresh-20260925-next-4",
+      "N": "257",
+      "factors": [
+        [
+          257,
+          1
+        ]
+      ],
+      "A": "17040900",
+      "D": "66307",
+      "curve_coefficients": [
+        "0",
+        "17040900",
+        "0",
+        "1129930956300",
+        "74922331919384100"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 57
+    },
+    {
+      "priority": 161,
+      "batch": "fresh-20260925-next-4",
+      "N": "263",
+      "factors": [
+        [
+          263,
+          1
+        ]
+      ],
+      "A": "18260880",
+      "D": "69433",
+      "curve_coefficients": [
+        "0",
+        "18260880",
+        "0",
+        "1267907681040",
+        "88034634017650320"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 57
+    },
+    {
+      "priority": 162,
+      "batch": "fresh-20260925-next-4",
+      "N": "267",
+      "factors": [
+        [
+          3,
+          1
+        ],
+        [
+          89,
+          1
+        ]
+      ],
+      "A": "28519200",
+      "D": "9485037",
+      "curve_coefficients": [
+        "0",
+        "28519200",
+        "0",
+        "270505667210400",
+        "2565756262200330784800"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 72
+    },
+    {
+      "priority": 163,
+      "batch": "fresh-20260925-next-4",
+      "N": "268",
+      "factors": [
+        [
+          2,
+          2
+        ],
+        [
+          67,
+          1
+        ]
+      ],
+      "A": "38775640",
+      "D": "19526808",
+      "curve_coefficients": [
+        "0",
+        "38775640",
+        "0",
+        "757164477357120",
+        "14785005373772829672960"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 74
+    },
+    {
+      "priority": 164,
+      "batch": "fresh-20260925-next-4",
+      "N": "271",
+      "factors": [
+        [
+          271,
+          1
+        ]
+      ],
+      "A": "19976224",
+      "D": "73713",
+      "curve_coefficients": [
+        "0",
+        "19976224",
+        "0",
+        "1472507399712",
+        "108542937954970656"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 57
+    },
+    {
+      "priority": 165,
+      "batch": "fresh-20260925-next-4",
+      "N": "279",
+      "factors": [
+        [
+          3,
+          2
+        ],
+        [
+          31,
+          1
+        ]
+      ],
+      "A": "33646912",
+      "D": "11929273",
+      "curve_coefficients": [
+        "0",
+        "33646912",
+        "0",
+        "401383198854976",
+        "4788209756754296112448"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 73
+    },
+    {
+      "priority": 166,
+      "batch": "fresh-20260925-next-4",
+      "N": "287",
+      "factors": [
+        [
+          7,
+          1
+        ],
+        [
+          41,
+          1
+        ]
+      ],
+      "A": "28257600",
+      "D": "4617697",
+      "curve_coefficients": [
+        "0",
+        "28257600",
+        "0",
+        "130485034747200",
+        "602540353497041198400"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 70
+    },
+    {
+      "priority": 167,
+      "batch": "fresh-20260925-next-4",
+      "N": "295",
+      "factors": [
+        [
+          5,
+          1
+        ],
+        [
+          59,
+          1
+        ]
+      ],
+      "A": "32591520",
+      "D": "6919145",
+      "curve_coefficients": [
+        "0",
+        "32591520",
+        "0",
+        "225505452650400",
+        "1560304925178751908000"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 71
+    },
+    {
+      "priority": 168,
+      "batch": "fresh-20260925-next-4",
+      "N": "300",
+      "factors": [
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          5,
+          2
+        ]
+      ],
+      "A": "99217480",
+      "D": "72217480",
+      "curve_coefficients": [
+        "0",
+        "99217480",
+        "0",
+        "7165236377550400",
+        "517455314791018460992000"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 0,
+      "max_coefficient_bits": 79
+    },
+    {
+      "priority": 169,
+      "batch": "fresh-20260925-next-4",
+      "N": "315",
+      "factors": [
+        [
+          3,
+          2
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          7,
+          1
+        ]
+      ],
+      "A": "68203200",
+      "D": "36947325",
+      "curve_coefficients": [
+        "0",
+        "68203200",
+        "0",
+        "2519925796440000",
+        "93104517376952523000000"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 77
+    },
+    {
+      "priority": 170,
+      "batch": "fresh-20260925-next-4",
+      "N": "323",
+      "factors": [
+        [
+          17,
+          1
+        ],
+        [
+          19,
+          1
+        ]
+      ],
+      "A": "37792800",
+      "D": "4094533",
+      "curve_coefficients": [
+        "0",
+        "37792800",
+        "0",
+        "154743866762400",
+        "633603869006249959200"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 70
+    },
+    {
+      "priority": 171,
+      "batch": "fresh-20260925-next-4",
+      "N": "325",
+      "factors": [
+        [
+          5,
+          2
+        ],
+        [
+          13,
+          1
+        ]
+      ],
+      "A": "46483780",
+      "D": "12155655",
+      "curve_coefficients": [
+        "0",
+        "46483780",
+        "0",
+        "565040792775900",
+        "6868440937910332714500"
+      ],
+      "observed_matches": 1,
+      "uncovered_matches": 1,
+      "latest_run_uncovered_matches": 1,
+      "max_coefficient_bits": 73
+    }
+  ],
+  "updated_at_utc": "2026-09-25T11:02:32.639142+00:00"
+}

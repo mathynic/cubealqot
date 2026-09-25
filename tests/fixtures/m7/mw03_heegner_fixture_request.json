@@ -1,0 +1,24 @@
+{
+  "policy": {
+    "both_signs": true,
+    "conda_executable": "conda",
+    "distribution": "Ubuntu-26.04",
+    "environment": "cubealqot-m7",
+    "generators_proof": true,
+    "model_semantics": "original_integral_model",
+    "proof_all": true,
+    "python_version": "3.14.7",
+    "rank_proof": true,
+    "require_gens_certain": true,
+    "sage_version": "10.8"
+  },
+  "problem": {
+    "a": "1",
+    "curve_coefficients": ["0", "0", "0", "-24649", "0"],
+    "d": "1",
+    "factors": [{"exponent": 1, "prime": "3"}],
+    "n": "3"
+  },
+  "request_id": "mw03-heegner-analytic-rank-one-fixture",
+  "schema_version": 1
+}

@@ -1,0 +1,8 @@
+{
+  "problem": {
+    "curve_coefficients": ["0", "40", "0", "520", "6760"]
+  },
+  "discovery_points": [
+    {"x": "-26", "y": "51"}
+  ]
+}

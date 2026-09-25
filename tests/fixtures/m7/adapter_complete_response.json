@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "request_id": "job-1",
+  "ok": true,
+  "complete": true,
+  "problem": {
+    "n": "3",
+    "factors": [{"prime": "3", "exponent": 1}],
+    "a": "40",
+    "d": "13",
+    "curve_coefficients": ["0", "40", "0", "520", "6760"]
+  },
+  "proof": {
+    "proof_all": true,
+    "rank_proven": true,
+    "rank": "2",
+    "generators": [
+      {"x": {"value": "-26"}, "y": {"value": "52"}},
+      {"x": {"value": "-934/49"}, "y": {"value": "22896/343"}}
+    ],
+    "gens_certain": true,
+    "both_signs": true,
+    "integral_points_complete": true,
+    "torsion_order": "1"
+  },
+  "model": {
+    "semantics": "original_integral_model",
+    "curve_coefficients": ["0", "40", "0", "520", "6760"]
+  },
+  "points": [
+    {"x": "-26", "y": "-52"},
+    {"x": "-26", "y": "52"}
+  ],
+  "backend": {
+    "name": "SageMath",
+    "sage_version": "10.8",
+    "python_version": "3.14.7",
+    "environment": "cubealqot-m7",
+    "distribution": "Ubuntu-26.04",
+    "script_sha256": "script-hash"
+  }
+}

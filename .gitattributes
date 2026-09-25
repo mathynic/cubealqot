@@ -1,0 +1,3 @@
+# Preserve bytes across platforms. Evidence, qualified helpers, and fixtures
+# participate in SHA-256 contracts; automatic line-ending conversion changes them.
+* -text

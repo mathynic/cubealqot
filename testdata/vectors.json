@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "vectors": [
+    {
+      "m": 2,
+      "s": 7,
+      "trace": ["F1"],
+      "expected_stage": "F1",
+      "rejection": "PrimePower"
+    },
+    {
+      "m": 7,
+      "s": 57,
+      "trace": ["F1"],
+      "expected_stage": "F1",
+      "rejection": "PrimePower"
+    },
+    {
+      "m": 6,
+      "s": 384,
+      "trace": ["F1", "F2"],
+      "expected_stage": "F2",
+      "rejection": "Adic2OddVal"
+    },
+    {
+      "m": 12,
+      "s": 3352,
+      "trace": ["F1", "F2"],
+      "expected_stage": "F2",
+      "rejection": "Adic2OddVal"
+    },
+    {
+      "m": 15,
+      "s": 2865,
+      "trace": ["F1", "F2", "F3"],
+      "expected_stage": "F3",
+      "rejection": "Adic3OddVal"
+    },
+    {
+      "m": 18,
+      "s": 10563,
+      "trace": ["F1", "F2"],
+      "expected_stage": "F2",
+      "rejection": "Adic2BadUnit"
+    },
+    {
+      "m": 21,
+      "s": 6739,
+      "trace": ["F1", "F2"],
+      "expected_stage": "F2",
+      "rejection": "Adic2BadUnit"
+    }
+  ]
+}

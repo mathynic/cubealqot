@@ -1,0 +1,42 @@
+name: Portable Rust checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      # Historical campaign/replay tests require excluded local out/ artifacts.
+      # Keep them in the repository; run this portable subset on a fresh clone.
+      - name: Run portable core and family tests
+        run: >-
+          cargo test --locked --lib
+          --test arithmetic --test cross --test cross_wide_diagnostics
+          --test exact_baseline --test exact_wide
+          --test f1 --test f2 --test f3 --test f4 --test f4b --test f56 --test f7
+          --test factorization --test factorization_wide --test filters_wide
+          --test pipeline --test persistence --test profiling --test tables
+          --test s_mod_boundaries --test scaffold --test u64_model
+          --test turn25_integration --test validation --test wide_exact_integration
+          --test m7_bounded --test m7_local --test m7_mw_points
+          --test m7_pocklington --test m7_points --test m7_primality
+          --test m7_problem --test m7_scaffold --test m7_theorem_map
+          --test m7_persistent_schema --test m7_persistent_store
+          --test m7_family_integration
+      - name: Validate bundled canonical proof store offline when present
+        if: ${{ hashFiles('out/m7-proof-store/store.json') != '' }}
+        run: cargo run --locked --quiet --bin cubealqot-family -- store check --store out/m7-proof-store
+      - name: Run independent baseline validation
+        run: cargo run --locked --quiet -- validate --max 1005
+      - name: Verify the failure sentinel is detected
+        shell: bash
+        run: |
+          set +e
+          cargo test --test scaffold deliberate_failure_proves_scaffold_is_live -- --ignored
+          status=$?
+          set -e
+          test "$status" -ne 0

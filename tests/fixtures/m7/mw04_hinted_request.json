@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "request_id": "mw04-hinted-n3",
+  "problem": {
+    "n": "3",
+    "factors": [{"prime": "3", "exponent": 1}],
+    "a": "40",
+    "d": "13",
+    "curve_coefficients": ["0", "40", "0", "520", "6760"]
+  },
+  "policy": {
+    "distribution": "Ubuntu-26.04",
+    "environment": "cubealqot-m7",
+    "conda_executable": "conda",
+    "sage_version": "10.8",
+    "python_version": "3.14.7",
+    "script_sha256": "027675a9b441f6ad92b6ca853884cf8e2385b28b11e4113777dc46866cc07857",
+    "proof_all": true,
+    "rank_proof": true,
+    "generators_proof": true,
+    "require_gens_certain": true,
+    "both_signs": true,
+    "model_semantics": "original_integral_model"
+  },
+  "discovery_points": [
+    {"x": "-26", "y": "52"},
+    {"x": "-26", "y": "-52"},
+    {"x": "-934/49", "y": "22896/343"}
+  ]
+}
