@@ -44,6 +44,25 @@ impl F4Context {
 /// is recorded in `foreign_zeros` and is not rejected by cheap F4. Only a
 /// nonzero nonsquare residue rejects here.
 pub fn f4(context: &F4Context, candidate: &mut Candidate, residues: &[u32]) -> Option<Rejection> {
+    f4_impl(context, candidate, residues, false)
+}
+
+/// Predicate path for discarded candidates. Scratch may be partial on
+/// rejection; callers needing complete diagnostics must use f4 instead.
+pub(crate) fn f4_short(
+    context: &F4Context,
+    candidate: &mut Candidate,
+    residues: &[u32],
+) -> Option<Rejection> {
+    f4_impl(context, candidate, residues, true)
+}
+
+fn f4_impl(
+    context: &F4Context,
+    candidate: &mut Candidate,
+    residues: &[u32],
+    early_exit: bool,
+) -> Option<Rejection> {
     assert_eq!(
         context.sieve_primes.len(),
         context.sigma_tables.len(),
@@ -88,6 +107,9 @@ pub fn f4(context: &F4Context, candidate: &mut Candidate, residues: &[u32]) -> O
                 candidate.foreign_zeros.push(index);
             }
         } else if !context.sq_sets[index].contains(s_mod) {
+            if early_exit {
+                return Some(Rejection::ModNonsquare);
+            }
             rejected = true;
         }
     }

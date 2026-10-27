@@ -96,11 +96,19 @@ pub fn analyze(candidate: &mut Candidate) -> F2Analysis {
 
 /// Applies the complete 2-local square condition.
 pub fn f2(candidate: &mut Candidate) -> Option<Rejection> {
-    let analysis = analyze(candidate);
-    if analysis.v2_s % 2 == 1 {
+    let v_sigma = v2_sigma(candidate);
+    let k = 3 * u32::from(candidate.a2);
+    let v2_s = if v_sigma == k {
+        v_of_s_at(candidate, 2, k + 1, CAP2)
+    } else {
+        v_sigma.min(k)
+    };
+    // An odd valuation is already decisive; complete diagnostic analysis
+    // still computes the unit through analyze when a record needs it.
+    if v2_s % 2 == 1 {
         return Some(Rejection::Adic2OddVal);
     }
-    if analysis.unit8 != 1 {
+    if unit8_of_s(candidate, v2_s) != 1 {
         return Some(Rejection::Adic2BadUnit);
     }
     None

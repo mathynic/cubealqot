@@ -326,20 +326,18 @@ pub fn lookup_family_map(map: &TheoremMap, candidate: &Candidate) -> Option<Excl
     {
         return None;
     }
-    let m = CanonicalInt::from_decimal(&candidate.m.to_string())
-        .expect("native candidate root must have canonical decimal form");
+    let m = CanonicalInt::from_native(candidate.m);
     for factor in candidate.f[..candidate.omega as usize]
         .iter()
         .filter(|factor| factor.e == 1)
     {
-        let q = CanonicalInt::from_decimal(&factor.p.to_string())
-            .expect("native factor prime must have canonical decimal form");
-        let n_bigint = m.as_bigint() / q.as_bigint();
-        let n = CanonicalInt::from_decimal(&n_bigint.to_string())
-            .expect("native exact factor division must remain canonical");
-        if n.as_bigint() <= &num_bigint::BigInt::from(1u8) {
+        let native_n = candidate.m / factor.p;
+        if native_n <= 1 || !map.contains_native_cofactor(native_n) {
             continue;
         }
+        let q = CanonicalInt::from_native(factor.p);
+        let n = CanonicalInt::from_native(native_n);
+        // The native index only skips misses; hits retain the trusted lookup.
         if let crate::family::LookupDecision::Excluded(witness) = map.lookup(&m, &n, &q) {
             return Some(witness);
         }
@@ -366,11 +364,12 @@ pub fn run_canonical_with_family_map(
     residues: &[u32],
     family_map: Option<&TheoremMap>,
 ) -> PipelineTrace {
-    run_canonical_with_residue_provider(context, candidate, || residues, family_map)
+    run_canonical_with_residue_provider(context, candidate, || residues, family_map, false)
 }
 
 /// Native runner entry point. Modular residues are initialized only on F4
-/// entry; diagnostic record construction prepares its own complete residues.
+/// entry, and F4 stops at the first decisive nonsquare. Diagnostic record
+/// construction reruns complete ungated analyses before reading scratch.
 pub(crate) fn run_canonical_with_lazy_residues(
     context: &CanonicalContext,
     candidate: &mut Candidate,
@@ -382,6 +381,7 @@ pub(crate) fn run_canonical_with_lazy_residues(
         candidate,
         || crate::tables::init_residues(&context.f4.sieve_primes, m),
         family_map,
+        true,
     )
 }
 
@@ -390,6 +390,7 @@ fn run_canonical_with_residue_provider<R: AsRef<[u32]>>(
     candidate: &mut Candidate,
     residues: impl FnOnce() -> R,
     family_map: Option<&TheoremMap>,
+    fast_f4: bool,
 ) -> PipelineTrace {
     let mut evaluated = Vec::with_capacity(if family_map.is_some() {
         FAMILY_STAGES.len()
@@ -449,7 +450,12 @@ fn run_canonical_with_residue_provider<R: AsRef<[u32]>>(
 
     evaluated.push(Stage::F4);
     let residues = residues();
-    if let Some(rejection) = f4(&context.f4, candidate, residues.as_ref()) {
+    let f4_result = if fast_f4 {
+        f4_modsq::f4_short(&context.f4, candidate, residues.as_ref())
+    } else {
+        f4(&context.f4, candidate, residues.as_ref())
+    };
+    if let Some(rejection) = f4_result {
         return PipelineTrace {
             evaluated,
             outcome: Outcome::Rejected {
@@ -911,9 +917,9 @@ mod tests {
             ],
             63,
         );
-        let spf = build_spf(2000);
+        let spf = build_spf(5000);
         let map = TheoremMap::test_only_single("5", &["11"]);
-        let mut candidates = (2u64..=2000)
+        let mut candidates = (2u64..=5000)
             .map(|m| Candidate::new(m, &spf))
             .collect::<Vec<_>>();
         for (m, factors) in [
@@ -936,6 +942,7 @@ mod tests {
         for family_map in [None, Some(&map)] {
             let mut seen = std::collections::BTreeSet::new();
             let mut f8_calls = 0;
+            let mut saw_partial_f4 = false;
             for row in &candidates {
                 let mut eager = Candidate::from_factors(row.m, row.f, row.omega);
                 let mut lazy = Candidate::from_factors(row.m, row.f, row.omega);
@@ -951,6 +958,7 @@ mod tests {
                         crate::tables::init_residues(&context.f4.sieve_primes, row.m)
                     },
                     family_map,
+                    true,
                 );
                 assert_eq!(actual, expected, "m={}", row.m);
                 assert_eq!(
@@ -961,6 +969,15 @@ mod tests {
                 );
                 if let Outcome::Rejected { stage, .. } = actual.outcome {
                     seen.insert(stage);
+                    if stage == Stage::F4 {
+                        saw_partial_f4 |= lazy.s_mod_sieve != eager.s_mod_sieve;
+                    }
+                }
+                if actual.evaluated.contains(&Stage::F4b) {
+                    // F4 passes must leave every residue and foreign zero
+                    // intact for the downstream filters.
+                    assert_eq!(lazy.s_mod_sieve, eager.s_mod_sieve, "m={}", row.m);
+                    assert_eq!(lazy.foreign_zeros, eager.foreign_zeros, "m={}", row.m);
                 }
                 f8_calls += usize::from(actual.evaluated.contains(&Stage::F8));
                 let expected_record =
@@ -972,6 +989,7 @@ mod tests {
             assert!(
                 seen.contains(&Stage::F1) && seen.contains(&Stage::F2) && seen.contains(&Stage::F3)
             );
+            assert!(seen.contains(&Stage::F4) && saw_partial_f4);
             if family_map.is_some() {
                 assert!(seen.contains(&Stage::F7c));
             }
@@ -1034,6 +1052,32 @@ mod tests {
                     lookup_family_map(map, &candidate),
                     lookup_without_native_index(map, &candidate)
                 );
+            }
+        }
+    }
+
+    #[test]
+    fn native_family_lookup_preserves_wide_hits_and_membership() {
+        let mut factors = [crate::Factor::default(); crate::MAX_OMEGA];
+        for (slot, p) in factors
+            .iter_mut()
+            .zip([3, 5, 17, 257, 641, 65_537, 6_700_417])
+        {
+            *slot = crate::Factor { p, e: 1 };
+        }
+        let candidate = Candidate::from_factors(u64::MAX, factors, 7);
+        let cofactor = "6148914691236517205"; // u64::MAX / 3
+        for allowed_q in [&["2"][..], &["3"][..]] {
+            let map = TheoremMap::test_only_single(cofactor, allowed_q);
+            let actual = lookup_family_map(&map, &candidate);
+            assert_eq!(actual, lookup_without_native_index(&map, &candidate));
+            if allowed_q == ["2"] {
+                let witness = actual.expect("unlisted q=3 must still be excluded");
+                assert_eq!(witness.m().to_string(), u64::MAX.to_string());
+                assert_eq!(witness.n().to_string(), cofactor);
+                assert_eq!(witness.q().to_string(), "3");
+            } else {
+                assert!(actual.is_none(), "listed q=3 must remain eligible");
             }
         }
     }

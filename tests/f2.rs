@@ -110,3 +110,30 @@ fn known_equal_valuation_candidate_uses_cached_exact_fallback() {
     assert_eq!(f2_adic2::v_of_s_at(&mut fallback_candidate, 2, 1, 2), 2);
     assert!(fallback_candidate.s_cache.is_some());
 }
+
+#[test]
+fn predicate_preserves_rejection_precedence_and_complete_analysis() {
+    let spf = build_spf(10_000);
+    let mut odd_bad_unit = 0;
+    let mut even_bad_unit = 0;
+    let mut passed = 0;
+    for m in 2u64..=10_000 {
+        let analysis = f2_adic2::analyze(&mut Candidate::new(m, &spf));
+        let expected = if analysis.v2_s % 2 == 1 {
+            odd_bad_unit += usize::from(analysis.unit8 != 1);
+            Some(Rejection::Adic2OddVal)
+        } else if analysis.unit8 != 1 {
+            even_bad_unit += 1;
+            Some(Rejection::Adic2BadUnit)
+        } else {
+            passed += 1;
+            None
+        };
+        let mut candidate = Candidate::new(m, &spf);
+        assert_eq!(f2_adic2::f2(&mut candidate), expected, "m={m}");
+        // A predicate rejection must not prevent a retained record from
+        // recovering the complete unit and valuation diagnostics.
+        assert_eq!(f2_adic2::analyze(&mut candidate), analysis, "m={m}");
+    }
+    assert!(odd_bad_unit > 0 && even_bad_unit > 0 && passed > 0);
+}

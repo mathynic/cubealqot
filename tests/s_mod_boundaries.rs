@@ -58,3 +58,60 @@ fn s_mod_matches_independent_biguint_boundary_matrix() {
     assert!(saw_sigma_at_least_cube);
     assert!(saw_sigma_below_cube);
 }
+
+#[test]
+fn modular_paths_match_direct_biguint_sums_across_all_bit_tiers() {
+    let cases: &[&[(u64, u32)]] = &[
+        &[(2, 1)],
+        &[(2, 63)],
+        &[(3, 40)],
+        &[(2, 12), (5, 13)],
+        &[(3, 1), (2_305_843_041_732_208_837, 1)],
+        &[(18_446_744_073_709_551_557, 1)],
+        &[
+            (3, 1),
+            (5, 1),
+            (17, 1),
+            (257, 1),
+            (641, 1),
+            (65_537, 1),
+            (6_700_417, 1),
+        ],
+        &[(2, 1), (3, 2), (5, 3), (7, 1), (11, 1), (13, 1)],
+    ];
+    for factors in cases {
+        let mut m = 1u128;
+        let mut sigma = BigUint::from(1u8);
+        for &(p, e) in *factors {
+            m *= u128::from(p).pow(e);
+            // Independent direct sum, without modular arithmetic or the
+            // production sigma helper and its exponent-one identity.
+            let mut term = BigUint::from(1u8);
+            let mut sum = BigUint::from(0u8);
+            for _ in 0..=3 * e {
+                sum += &term;
+                term *= p;
+            }
+            sigma *= sum;
+        }
+        let m = u64::try_from(m).unwrap();
+        let candidate = candidate(m, factors);
+        let s = &sigma - BigUint::from(m).pow(3);
+        for bits in 1..128 {
+            let power = 1u128 << bits;
+            for modulus in [power - 1, power, power + 1] {
+                let big_modulus = BigUint::from(modulus);
+                assert_eq!(
+                    exact::s_mod(&candidate, modulus),
+                    (&s % &big_modulus).to_u128().unwrap(),
+                    "S: m={m}, modulus={modulus}"
+                );
+                assert_eq!(
+                    exact::sigma_mod(&candidate, modulus),
+                    (&sigma % &big_modulus).to_u128().unwrap(),
+                    "sigma: m={m}, modulus={modulus}"
+                );
+            }
+        }
+    }
+}

@@ -15,6 +15,11 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer, de};
 pub struct CanonicalInt(BigInt);
 
 impl CanonicalInt {
+    /// Constructs a native value without a decimal serialization round trip.
+    pub(crate) fn from_native(value: u64) -> Self {
+        Self(BigInt::from(value))
+    }
+
     pub fn from_decimal(value: &str) -> Result<Self, ParseCanonicalIntError> {
         let parsed = BigInt::from_str(value).map_err(|_| ParseCanonicalIntError)?;
         if parsed.to_string() != value {

@@ -174,6 +174,27 @@ pub fn cube_mod(root: u64, modulus: u64) -> u64 {
 
 /// Computes `(sigma(m^3) - m^3) mod modulus` exactly.
 pub fn s_mod(candidate: &Candidate, modulus: u128) -> u128 {
+    if modulus.is_power_of_two() && modulus <= u128::from(u64::MAX) {
+        // Wrapping modulo 2^64 preserves the low bits required modulo 2^k.
+        // Wider moduli continue through the existing exact arithmetic below.
+        let mask = modulus as u64 - 1;
+        let mut sigma = 1u64;
+        for factor in &candidate.f[..candidate.omega as usize] {
+            let mut term = 1u64;
+            let mut sum = 0u64;
+            for _ in 0..=3 * factor.e {
+                sum = sum.wrapping_add(term) & mask;
+                term = term.wrapping_mul(factor.p) & mask;
+            }
+            sigma = sigma.wrapping_mul(sum) & mask;
+        }
+        let cube = candidate
+            .m
+            .wrapping_mul(candidate.m)
+            .wrapping_mul(candidate.m)
+            & mask;
+        return u128::from(sigma.wrapping_sub(cube) & mask);
+    }
     let sigma = sigma_mod(candidate, modulus);
     let cube = m3_mod(candidate, modulus);
     // Compute the modular difference without forming `sigma + modulus`:
@@ -288,15 +309,25 @@ fn valuation_big(value: &BigUint, q: u64) -> u32 {
 }
 
 fn sigma_prime_power_mod_small(p: u64, exponent_in_m: u32, modulus: u64) -> u64 {
+    let base = p % modulus;
+    if exponent_in_m == 1 {
+        // sigma(p^3) = (p + 1)(p^2 + 1). Each reduced factor is at most
+        // modulus <= u64::MAX, so their product fits in u128.
+        let square = mod_mul_small(base, base, modulus);
+        return ((u128::from(base) + 1) * (u128::from(square) + 1) % u128::from(modulus)) as u64;
+    }
     let mut term = 1u64 % modulus;
     let mut sum = 0u64;
-    for _ in 0..=3 * exponent_in_m {
+    let last = 3 * exponent_in_m;
+    for index in 0..=last {
         sum = if sum >= modulus - term {
             sum - (modulus - term)
         } else {
             sum + term
         };
-        term = mod_mul_small(term, p % modulus, modulus);
+        if index != last {
+            term = mod_mul_small(term, base, modulus);
+        }
     }
     sum
 }
