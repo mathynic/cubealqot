@@ -98,6 +98,9 @@ pub fn legendre(a: u32, p: u32) -> i32 {
 pub fn valuation(mut n: u128, p: u128) -> u32 {
     assert!(n != 0, "valuation is undefined for zero");
     assert!(p >= 2, "valuation base must be at least two");
+    if p == 2 {
+        return n.trailing_zeros();
+    }
 
     let mut exponent = 0;
     while n % p == 0 {

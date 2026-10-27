@@ -114,6 +114,22 @@ fn valuation_helpers_match_repeated_division() {
 }
 
 #[test]
+fn binary_valuations_cover_the_full_u128_width() {
+    for exponent in 0..128u32 {
+        for odd in [1u128, 3, 5, u128::from(u64::MAX), u128::MAX] {
+            if odd <= u128::MAX >> exponent {
+                // An odd multiple of 2^exponent has exactly this valuation,
+                // including values whose low 64 bits are all zero.
+                let n = odd << exponent;
+                assert_eq!(numth::valuation(n, 2), exponent, "n={n}");
+                assert_eq!(numth::v2(n), exponent, "n={n}");
+                assert_eq!(numth::v_p(n, 2), exponent, "n={n}");
+            }
+        }
+    }
+}
+
+#[test]
 fn integer_square_root_matches_bruteforce_boundary() {
     for n in 0..=100_000u128 {
         let root = isqrt(n);
