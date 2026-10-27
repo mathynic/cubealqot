@@ -12,8 +12,8 @@ use std::{
 
 use cubealqot::filters::Stage;
 use cubealqot::survivors::{
-    Checkpoint, CheckpointSchedule, STREAM_BATCH_SIZE, ShardMetadata, config_hash, read_checkpoint,
-    read_jsonl, resume_jsonl_range, resume_stream_jsonl_range,
+    Checkpoint, CheckpointSchedule, MAX_COMPUTE_BATCH_SIZE, STREAM_BATCH_SIZE, ShardMetadata,
+    config_hash, read_checkpoint, read_jsonl, resume_jsonl_range, resume_stream_jsonl_range,
     resume_stream_jsonl_range_with_progress_and_cancel,
     resume_stream_jsonl_range_with_schedule_and_cancel, stream_jsonl_range,
     stream_jsonl_range_checkpointed, stream_jsonl_range_checkpointed_with_progress_and_cancel,
@@ -628,5 +628,114 @@ fn elapsed_schedule_is_supported_and_zero_intervals_are_rejected() {
     );
 
     let _ = fs::remove_file(path);
+    let _ = fs::remove_file(checkpoint_path);
+}
+
+#[test]
+fn large_batches_resume_small_shards_and_discard_uncheckpointed_survivors() {
+    // This retained regression reaches F8 and produces a real survivor record.
+    let start = 3_480_818_220_239u64;
+    let max = u64::from(MAX_COMPUTE_BATCH_SIZE);
+    let end = start + max + 16;
+    let config = "large-compute-resume";
+    let full_path = temp_path("large-full");
+    let full = stream_jsonl_range(&full_path, start, end, 1, Stage::F8).unwrap();
+    assert!(full.records_written > 0);
+
+    for old_small_shards in [true, false] {
+        let output_path = temp_path("large-resumed");
+        let checkpoint_path = temp_path("large-state");
+        let stop = Cell::new(false);
+        let schedule = if old_small_shards {
+            CheckpointSchedule::every_batch()
+        } else {
+            CheckpointSchedule::new(Some(max + 17), None).unwrap()
+        };
+        let partial = stream_jsonl_range_checkpointed_with_schedule_and_cancel(
+            &output_path,
+            &checkpoint_path,
+            start,
+            end,
+            4,
+            Stage::F8,
+            config,
+            schedule,
+            |_| stop.set(true),
+            || stop.get(),
+        )
+        .unwrap();
+        assert!(partial.interrupted);
+        assert!(partial.records_written > 0);
+        let saved = read_checkpoint(&checkpoint_path).unwrap();
+        if old_small_shards {
+            assert_eq!(saved.next_m, start + u64::from(STREAM_BATCH_SIZE));
+            assert_eq!(saved.completed_output_shards.len(), 1);
+        } else {
+            assert_eq!(partial.stats.tested, max);
+            assert_eq!(saved.next_m, start);
+            assert_eq!(saved.stats.tested, 0);
+            assert_eq!(saved.output_bytes, 0);
+            assert!(fs::metadata(&output_path).unwrap().len() > 0);
+        }
+        let resumed = resume_stream_jsonl_range_with_schedule_and_cancel(
+            &output_path,
+            &checkpoint_path,
+            end,
+            2,
+            Stage::F8,
+            config,
+            CheckpointSchedule::new(Some(max + 17), None).unwrap(),
+            |_| {},
+            || false,
+        )
+        .unwrap();
+        assert_eq!(resumed.stats, full.stats);
+        assert_eq!(
+            fs::read(&output_path).unwrap(),
+            fs::read(&full_path).unwrap()
+        );
+        let saved = read_checkpoint(&checkpoint_path).unwrap();
+        assert!(saved.complete);
+        let mut next = start;
+        let mut bytes = 0;
+        for shard in saved.completed_output_shards {
+            assert_eq!(shard.start_m, next);
+            next = shard.end_m + 1;
+            bytes += shard.bytes;
+        }
+        assert_eq!(next, end + 1);
+        assert_eq!(bytes, fs::metadata(&output_path).unwrap().len());
+        let _ = fs::remove_file(output_path);
+        let _ = fs::remove_file(checkpoint_path);
+    }
+    let _ = fs::remove_file(full_path);
+}
+
+#[test]
+fn larger_than_legacy_candidate_intervals_checkpoint_exactly() {
+    let output_path = temp_path("larger-interval");
+    let checkpoint_path = temp_path("larger-interval-state");
+    let interval = u64::from(STREAM_BATCH_SIZE) + 17;
+    let end = 2 + 2 * interval + 6;
+    let mut checkpoints = Vec::new();
+    stream_jsonl_range_checkpointed_with_schedule_and_cancel(
+        &output_path,
+        &checkpoint_path,
+        2,
+        end,
+        4,
+        Stage::F8,
+        "larger-interval",
+        CheckpointSchedule::new(Some(interval), None).unwrap(),
+        |progress| {
+            let saved = read_checkpoint(&checkpoint_path).unwrap();
+            assert_eq!(saved.stats.tested, progress.tested);
+            checkpoints.push(progress.tested);
+        },
+        || false,
+    )
+    .unwrap();
+    assert_eq!(checkpoints, vec![interval, 2 * interval, 2 * interval + 7]);
+    let _ = fs::remove_file(output_path);
     let _ = fs::remove_file(checkpoint_path);
 }

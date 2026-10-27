@@ -366,6 +366,31 @@ pub fn run_canonical_with_family_map(
     residues: &[u32],
     family_map: Option<&TheoremMap>,
 ) -> PipelineTrace {
+    run_canonical_with_residue_provider(context, candidate, || residues, family_map)
+}
+
+/// Native runner entry point. Modular residues are initialized only on F4
+/// entry; diagnostic record construction prepares its own complete residues.
+pub(crate) fn run_canonical_with_lazy_residues(
+    context: &CanonicalContext,
+    candidate: &mut Candidate,
+    family_map: Option<&TheoremMap>,
+) -> PipelineTrace {
+    let m = candidate.m;
+    run_canonical_with_residue_provider(
+        context,
+        candidate,
+        || crate::tables::init_residues(&context.f4.sieve_primes, m),
+        family_map,
+    )
+}
+
+fn run_canonical_with_residue_provider<R: AsRef<[u32]>>(
+    context: &CanonicalContext,
+    candidate: &mut Candidate,
+    residues: impl FnOnce() -> R,
+    family_map: Option<&TheoremMap>,
+) -> PipelineTrace {
     let mut evaluated = Vec::with_capacity(if family_map.is_some() {
         FAMILY_STAGES.len()
     } else {
@@ -423,7 +448,8 @@ pub fn run_canonical_with_family_map(
     }
 
     evaluated.push(Stage::F4);
-    if let Some(rejection) = f4(&context.f4, candidate, residues) {
+    let residues = residues();
+    if let Some(rejection) = f4(&context.f4, candidate, residues.as_ref()) {
         return PipelineTrace {
             evaluated,
             outcome: Outcome::Rejected {
@@ -873,6 +899,88 @@ mod tests {
         run_canonical_with_family_map,
     };
     use crate::{Candidate, build_spf};
+
+    #[test]
+    fn lazy_residues_preserve_traces_and_complete_diagnostics() {
+        use crate::{Factor, MAX_OMEGA, survivors::SurvivorRecord};
+        use std::cell::Cell;
+        let context = CanonicalContext::new(
+            &[
+                5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83,
+                89, 97,
+            ],
+            63,
+        );
+        let spf = build_spf(2000);
+        let map = TheoremMap::test_only_single("5", &["11"]);
+        let mut candidates = (2u64..=2000)
+            .map(|m| Candidate::new(m, &spf))
+            .collect::<Vec<_>>();
+        for (m, factors) in [
+            (
+                3_480_818_220_239u64,
+                vec![(29, 1), (3931, 1), (30_533_761, 1)],
+            ),
+            (
+                3 * 2_305_843_041_732_208_837,
+                vec![(3, 1), (2_305_843_041_732_208_837, 1)],
+            ),
+            (1u64 << 63, vec![(2, 63)]),
+        ] {
+            let mut slots = [Factor::default(); MAX_OMEGA];
+            for (slot, &(p, e)) in slots.iter_mut().zip(&factors) {
+                *slot = Factor { p, e };
+            }
+            candidates.push(Candidate::from_factors(m, slots, factors.len() as u8));
+        }
+        for family_map in [None, Some(&map)] {
+            let mut seen = std::collections::BTreeSet::new();
+            let mut f8_calls = 0;
+            for row in &candidates {
+                let mut eager = Candidate::from_factors(row.m, row.f, row.omega);
+                let mut lazy = Candidate::from_factors(row.m, row.f, row.omega);
+                let residues = crate::tables::init_residues(&context.f4.sieve_primes, row.m);
+                let expected =
+                    run_canonical_with_family_map(&context, &mut eager, &residues, family_map);
+                let calls = Cell::new(0);
+                let actual = super::run_canonical_with_residue_provider(
+                    &context,
+                    &mut lazy,
+                    || {
+                        calls.set(calls.get() + 1);
+                        crate::tables::init_residues(&context.f4.sieve_primes, row.m)
+                    },
+                    family_map,
+                );
+                assert_eq!(actual, expected, "m={}", row.m);
+                assert_eq!(
+                    calls.get(),
+                    usize::from(actual.evaluated.contains(&Stage::F4)),
+                    "m={}",
+                    row.m
+                );
+                if let Outcome::Rejected { stage, .. } = actual.outcome {
+                    seen.insert(stage);
+                }
+                f8_calls += usize::from(actual.evaluated.contains(&Stage::F8));
+                let expected_record =
+                    SurvivorRecord::from_trace(&context, &mut eager, &residues, &expected);
+                let actual_record =
+                    SurvivorRecord::from_trace(&context, &mut lazy, &residues, &actual);
+                assert_eq!(actual_record, expected_record, "m={}", row.m);
+            }
+            assert!(
+                seen.contains(&Stage::F1) && seen.contains(&Stage::F2) && seen.contains(&Stage::F3)
+            );
+            if family_map.is_some() {
+                assert!(seen.contains(&Stage::F7c));
+            }
+            assert!(
+                f8_calls >= 2,
+                "retained and wide exact fallbacks must be exercised"
+            );
+        }
+    }
 
     /// Reference adapter from before the native negative pre-check.
     fn lookup_without_native_index(

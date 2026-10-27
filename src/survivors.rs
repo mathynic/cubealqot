@@ -189,8 +189,11 @@ pub struct RunOutput {
     pub run_metadata: Option<RunMetadata>,
 }
 
-/// Maximum number of candidates retained by the streaming path at once.
+/// Legacy checkpoint quantum and maximum diagnostic streaming batch.
 pub const STREAM_BATCH_SIZE: u32 = 1 << 16;
+
+/// Maximum compute batch when only sparse F8 survivor records are retained.
+pub const MAX_COMPUTE_BATCH_SIZE: u32 = 1 << 20;
 
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct StreamOutput {
@@ -1588,7 +1591,14 @@ impl CheckpointScheduler {
         }
     }
 
-    fn batch_len(&self, remaining: u64) -> u64 {
+    fn batch_len(&self, remaining: u64, dump_beyond: Stage) -> u64 {
+        // Keep diagnostic memory and elapsed-checkpoint polling at their
+        // existing bounds. Explicit candidate intervals still clip any batch.
+        let batch_limit = if dump_beyond == Stage::F8 && self.schedule.every_seconds.is_none() {
+            u64::from(MAX_COMPUTE_BATCH_SIZE)
+        } else {
+            u64::from(STREAM_BATCH_SIZE)
+        };
         let candidate_limit = self
             .schedule
             .every_candidates
@@ -1597,10 +1607,8 @@ impl CheckpointScheduler {
                     .saturating_sub(self.candidates_since_checkpoint)
                     .max(1)
             })
-            .unwrap_or(u64::from(STREAM_BATCH_SIZE));
-        remaining
-            .min(u64::from(STREAM_BATCH_SIZE))
-            .min(candidate_limit)
+            .unwrap_or(batch_limit);
+        remaining.min(batch_limit).min(candidate_limit)
     }
 
     fn advance(&mut self, candidates: u64, final_batch: bool) -> bool {
@@ -1656,7 +1664,7 @@ fn stream_batches<'a>(
                 }),
             });
         }
-        let batch_len = scheduler.batch_len(end - next_m + 1);
+        let batch_len = scheduler.batch_len(end - next_m + 1, dump_beyond);
         let batch_end = end.min(next_m.saturating_add(batch_len.saturating_sub(1)));
         let before_bytes = fs::metadata(writer.path)
             .map_err(|error| format!("could not stat JSONL before batch: {error}"))?
@@ -1861,15 +1869,16 @@ fn process_candidate(
     dump_beyond: Stage,
     family_map: Option<&TheoremMap>,
 ) {
-    let residues = crate::tables::init_residues(&context.f4.sieve_primes, candidate.m);
-    let trace =
-        filters::run_canonical_with_family_map(context, &mut candidate, &residues, family_map);
+    let trace = filters::run_canonical_with_lazy_residues(context, &mut candidate, family_map);
     output.stats.record(&trace);
     let dump = match &trace.outcome {
         Outcome::Rejected { stage, .. } => stage.execution_index() >= dump_beyond.execution_index(),
         Outcome::Solution { .. } | Outcome::WideSolution { .. } => true,
     };
     if dump {
+        // Early rejections still need complete residues for ungated record
+        // diagnostics. Ordinary discarded candidates need no such vector.
+        let residues = crate::tables::init_residues(&context.f4.sieve_primes, candidate.m);
         output.records.push(SurvivorRecord::from_trace(
             context,
             &mut candidate,
@@ -1947,4 +1956,46 @@ fn validate_range_options(start: u64, end: u64, threads: usize) -> Result<(), St
         return Err("thread count must be positive".to_owned());
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{
+        CheckpointSchedule, CheckpointScheduler, MAX_COMPUTE_BATCH_SIZE, STREAM_BATCH_SIZE,
+    };
+    use crate::filters::Stage;
+    use std::time::Duration;
+
+    #[test]
+    fn large_compute_batches_land_exactly_on_candidate_checkpoints() {
+        let max = u64::from(MAX_COMPUTE_BATCH_SIZE);
+        let mut scheduler =
+            CheckpointScheduler::new(CheckpointSchedule::new(Some(max + 17), None).unwrap());
+        assert_eq!(scheduler.batch_len(3 * max, Stage::F8), max);
+        assert!(!scheduler.advance(max, false));
+        assert_eq!(scheduler.batch_len(2 * max, Stage::F8), 17);
+        assert!(scheduler.advance(17, false));
+        scheduler.checkpointed();
+        assert_eq!(scheduler.batch_len(2 * max, Stage::F8), max);
+        assert_eq!(scheduler.batch_len(9, Stage::F8), 9);
+    }
+
+    #[test]
+    fn diagnostic_default_and_elapsed_schedules_keep_legacy_batch_bounds() {
+        let max = u64::from(MAX_COMPUTE_BATCH_SIZE);
+        let small = u64::from(STREAM_BATCH_SIZE);
+        let scheduler = CheckpointScheduler::new(CheckpointSchedule::disabled());
+        assert_eq!(scheduler.batch_len(2 * max, Stage::F8), max);
+        for stage in crate::filters::FAMILY_STAGES {
+            if stage != Stage::F8 {
+                assert_eq!(scheduler.batch_len(2 * max, stage), small);
+            }
+        }
+        let default = CheckpointScheduler::new(CheckpointSchedule::every_batch());
+        assert_eq!(default.batch_len(2 * max, Stage::F8), small);
+        let elapsed = CheckpointScheduler::new(
+            CheckpointSchedule::new(Some(2 * max), Some(Duration::from_secs(1))).unwrap(),
+        );
+        assert_eq!(elapsed.batch_len(2 * max, Stage::F8), small);
+    }
 }
