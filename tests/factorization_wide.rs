@@ -67,6 +67,26 @@ fn segmented_factorization_crosses_the_u32_boundary_without_truncation() {
 }
 
 #[test]
+fn campaign_range_above_four_trillion_factors_exactly() {
+    let cases = [
+        // This prime square requires base primes beyond the former limit.
+        (2_000_003u64.pow(2), vec![(2_000_003, 2)]),
+        (5_000_000_000_000, vec![(2, 12), (5, 13)]),
+    ];
+    for (m, expected) in cases {
+        let segment = SegmentedSpf::try_new(m, m).expect("campaign endpoint should factor");
+        let factors = factors_for(&segment, m);
+        assert_eq!(
+            factors.iter().map(|f| (f.p, f.e)).collect::<Vec<_>>(),
+            expected,
+            "m={m}"
+        );
+        assert_eq!(reconstruct(&factors), u128::from(m), "m={m}");
+        assert!(factors.iter().all(|factor| independently_prime(factor.p)));
+    }
+}
+
+#[test]
 fn unsupported_base_prime_horizon_fails_before_allocating_a_segment() {
     let end = (cubealqot::spf::MAX_BASE_PRIME_LIMIT as u64 + 1).pow(2);
     let error = SegmentedSpf::try_new(end, end)

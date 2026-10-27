@@ -9,8 +9,38 @@ pub const FLAT_SPF_LIMIT: u64 = 100_000_000;
 pub const SEGMENT_WIDTH: u64 = 1 << 18;
 
 /// Largest base-prime bound currently prepared for segmented factorization.
-/// This supports controlled roots through approximately `2e6^2`.
-pub const MAX_BASE_PRIME_LIMIT: u32 = 2_000_000;
+/// This supports controlled roots through approximately `3e6^2`.
+pub const MAX_BASE_PRIME_LIMIT: u32 = 3_000_000;
+
+/// Checks the full run endpoint before segment allocation or worker startup.
+pub(crate) fn base_prime_limit(end: u64) -> Result<u32, String> {
+    let root = crate::exact::isqrt(u128::from(end));
+    if root > u128::from(MAX_BASE_PRIME_LIMIT) {
+        return Err(format!(
+            "requested range requires base-prime coverage through {root}, but configured coverage ends at {}",
+            MAX_BASE_PRIME_LIMIT
+        ));
+    }
+    Ok(u32::try_from(root).expect("base-prime horizon fits u32"))
+}
+
+/// Complete, immutable base primes prepared once for a run's endpoint.
+/// Keep the coverage bound separately: it need not itself be prime.
+#[derive(Debug)]
+pub(crate) struct BasePrimes {
+    limit: u32,
+    primes: Vec<u32>,
+}
+
+impl BasePrimes {
+    pub(crate) fn for_end(end: u64) -> Result<Self, String> {
+        let limit = base_prime_limit(end)?;
+        Ok(Self {
+            limit,
+            primes: primes_up_to(limit),
+        })
+    }
+}
 
 /// Builds a flat SPF table for `0..=limit`.
 ///
@@ -74,20 +104,26 @@ impl SegmentedSpf {
     pub fn try_new(start: impl Into<u64>, end: impl Into<u64>) -> Result<Self, String> {
         let start = start.into();
         let end = end.into();
-        if start < 2 {
-            return Err("segmented range must start at least at two".to_owned());
-        }
-        if end < start {
-            return Err("segmented range end must not precede start".to_owned());
-        }
-        let root = crate::exact::isqrt(u128::from(end));
-        if root > u128::from(MAX_BASE_PRIME_LIMIT) {
+        validate_segment_bounds(start, end)?;
+        let base_primes = BasePrimes::for_end(end)?;
+        Self::try_new_with_base_primes(start, end, &base_primes)
+    }
+
+    /// Reuses the run's complete prime table, rejecting insufficient coverage
+    /// before allocating segment buffers.
+    pub(crate) fn try_new_with_base_primes(
+        start: u64,
+        end: u64,
+        base_primes: &BasePrimes,
+    ) -> Result<Self, String> {
+        validate_segment_bounds(start, end)?;
+        let root = base_prime_limit(end)?;
+        if root > base_primes.limit {
             return Err(format!(
-                "requested range requires base-prime coverage through {root}, but configured coverage ends at {}",
-                MAX_BASE_PRIME_LIMIT
+                "segment requires base-prime coverage through {root}, but supplied coverage ends at {}",
+                base_primes.limit
             ));
         }
-        let root = u32::try_from(root).expect("base-prime horizon fits u32");
 
         let len = usize::try_from(u64::from(end) - u64::from(start) + 1)
             .expect("segmented range does not fit in usize");
@@ -97,7 +133,10 @@ impl SegmentedSpf {
         let mut counts = vec![0u8; len];
         let mut packed = vec![0u64; len * MAX_OMEGA];
 
-        for prime in primes_up_to(root) {
+        for &prime in &base_primes.primes {
+            if prime > root {
+                break;
+            }
             let first = u64::from(start).div_ceil(u64::from(prime)) * u64::from(prime);
             let mut multiple = first;
             while multiple <= u64::from(end) {
@@ -172,6 +211,16 @@ impl SegmentedSpf {
     }
 }
 
+fn validate_segment_bounds(start: u64, end: u64) -> Result<(), String> {
+    if start < 2 {
+        return Err("segmented range must start at least at two".to_owned());
+    }
+    if end < start {
+        return Err("segmented range end must not precede start".to_owned());
+    }
+    Ok(())
+}
+
 fn primes_up_to(limit: u32) -> Vec<u32> {
     let len = usize::try_from(limit)
         .expect("prime limit fits in usize")
@@ -196,7 +245,66 @@ fn primes_up_to(limit: u32) -> Vec<u32> {
 
 #[cfg(test)]
 mod tests {
-    use super::build_spf;
+    use super::{BasePrimes, MAX_BASE_PRIME_LIMIT, SegmentedSpf, base_prime_limit, build_spf};
+    use crate::{Factor, MAX_OMEGA, factor::factor_into};
+
+    #[test]
+    fn shared_base_primes_match_flat_factorizations_across_segments() {
+        let spf = build_spf(65_535);
+        let base_primes = BasePrimes::for_end(65_535).unwrap();
+        for (start, end) in [(2, 1025), (31_000, 32_023), (64_512, 65_535)] {
+            let segment = SegmentedSpf::try_new_with_base_primes(start, end, &base_primes).unwrap();
+            for m in start..=end {
+                let mut actual = [Factor::default(); MAX_OMEGA];
+                let mut expected = actual;
+                assert_eq!(
+                    segment.factor_into(m, &mut actual),
+                    factor_into(m, &spf, &mut expected),
+                    "m={m}"
+                );
+                assert_eq!(actual, expected, "m={m}");
+            }
+        }
+    }
+
+    #[test]
+    fn shared_coverage_uses_the_sieved_bound_and_rejects_a_missing_prime() {
+        let base_primes = BasePrimes::for_end(100).unwrap();
+        assert_eq!(base_primes.limit, 10);
+        assert_eq!(base_primes.primes.last(), Some(&7));
+        // sqrt(120) is still 10, and no prime from 8 through 10 is missing.
+        SegmentedSpf::try_new_with_base_primes(100, 120, &base_primes).unwrap();
+        let error = SegmentedSpf::try_new_with_base_primes(2, 121, &base_primes).unwrap_err();
+        assert!(error.contains("coverage through 11"), "{error}");
+        assert!(error.contains("coverage ends at 10"), "{error}");
+    }
+
+    #[test]
+    fn shared_wide_table_covers_prime_squares_and_the_campaign_endpoint() {
+        let base_primes = BasePrimes::for_end(5_000_000_000_000).unwrap();
+        for (m, expected) in [
+            (2_000_003u64.pow(2), vec![Factor { p: 2_000_003, e: 2 }]),
+            (
+                5_000_000_000_000,
+                vec![Factor { p: 2, e: 12 }, Factor { p: 5, e: 13 }],
+            ),
+        ] {
+            let segment = SegmentedSpf::try_new_with_base_primes(m, m, &base_primes).unwrap();
+            let mut actual = [Factor::default(); MAX_OMEGA];
+            let count = segment.factor_into(m, &mut actual);
+            assert_eq!(&actual[..count as usize], expected);
+        }
+    }
+
+    #[test]
+    fn base_prime_coverage_accepts_the_last_supported_endpoint() {
+        let first_unsupported = (u64::from(MAX_BASE_PRIME_LIMIT) + 1).pow(2);
+        assert_eq!(
+            base_prime_limit(first_unsupported - 1).unwrap(),
+            MAX_BASE_PRIME_LIMIT
+        );
+        assert!(base_prime_limit(first_unsupported).is_err());
+    }
 
     #[test]
     fn primes_are_zero_and_composites_are_marked() {

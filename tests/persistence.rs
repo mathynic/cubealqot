@@ -34,6 +34,33 @@ fn temp_path(label: &str) -> PathBuf {
 }
 
 #[test]
+fn unsupported_endpoint_is_rejected_before_output_or_checkpoint_changes() {
+    let output_path = temp_path("unsupported-output");
+    let checkpoint_path = temp_path("unsupported-checkpoint");
+    fs::write(&output_path, b"existing output").unwrap();
+    fs::write(&checkpoint_path, b"existing checkpoint").unwrap();
+    let end = (u64::from(cubealqot::MAX_BASE_PRIME_LIMIT) + 1).pow(2);
+
+    let error = stream_jsonl_range_checkpointed(
+        &output_path,
+        &checkpoint_path,
+        4_000_000_000_001,
+        end,
+        4,
+        Stage::F8,
+        "unsupported range",
+        |_| panic!("unsupported run must not start processing"),
+    )
+    .expect_err("full endpoint must be checked before starting batches");
+    assert!(error.contains("base-prime coverage"), "{error}");
+    assert_eq!(fs::read(&output_path).unwrap(), b"existing output");
+    assert_eq!(fs::read(&checkpoint_path).unwrap(), b"existing checkpoint");
+
+    let _ = fs::remove_file(output_path);
+    let _ = fs::remove_file(checkpoint_path);
+}
+
+#[test]
 fn one_and_four_thread_jsonl_are_byte_identical() {
     let one_path = temp_path("one");
     let four_path = temp_path("four");
@@ -238,6 +265,55 @@ fn interrupted_flat_run_resumes_without_gaps_or_duplicates() {
     let records = read_jsonl(&resumed_path).unwrap();
     assert!(records.windows(2).all(|pair| pair[0].m < pair[1].m));
 
+    let _ = fs::remove_file(full_path);
+    let _ = fs::remove_file(resumed_path);
+    let _ = fs::remove_file(checkpoint_path);
+}
+
+#[test]
+fn wide_prime_square_boundary_resumes_with_shared_coverage_and_new_worker_count() {
+    let start = 2_000_003u64.pow(2) - 100;
+    let end = start + u64::from(STREAM_BATCH_SIZE) + 99;
+    let full_path = temp_path("wide-shared-full");
+    let resumed_path = temp_path("wide-shared-resumed");
+    let checkpoint_path = temp_path("wide-shared-checkpoint");
+    let config = format!("wide-shared-{start}-{end}");
+    let stop = Cell::new(false);
+    let full = stream_jsonl_range(&full_path, start, end, 1, Stage::F8).unwrap();
+    let partial = stream_jsonl_range_checkpointed_with_progress_and_cancel(
+        &resumed_path,
+        &checkpoint_path,
+        start,
+        end,
+        4,
+        Stage::F8,
+        &config,
+        |_| stop.set(true),
+        || stop.get(),
+    )
+    .unwrap();
+    assert!(partial.interrupted);
+    assert_eq!(
+        read_checkpoint(&checkpoint_path).unwrap().next_m,
+        start + u64::from(STREAM_BATCH_SIZE)
+    );
+    let resumed = resume_stream_jsonl_range_with_progress_and_cancel(
+        &resumed_path,
+        &checkpoint_path,
+        end,
+        2,
+        Stage::F8,
+        &config,
+        |_| {},
+        || false,
+    )
+    .unwrap();
+    assert_eq!(resumed.stats, full.stats);
+    assert_eq!(
+        fs::read(&resumed_path).unwrap(),
+        fs::read(&full_path).unwrap()
+    );
+    assert!(read_checkpoint(&checkpoint_path).unwrap().complete);
     let _ = fs::remove_file(full_path);
     let _ = fs::remove_file(resumed_path);
     let _ = fs::remove_file(checkpoint_path);

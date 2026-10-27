@@ -15,7 +15,7 @@ use crate::{
     family::{ExclusionWitness, LoadedTheoremMap, TheoremMap},
     filters::{self, CanonicalContext, FamilyTag, Outcome, PipelineTrace, Rejection, Stage},
     numth::legendre,
-    spf::{FLAT_SPF_LIMIT, SEGMENT_WIDTH, SegmentedSpf},
+    spf::{BasePrimes, FLAT_SPF_LIMIT, SEGMENT_WIDTH, SegmentedSpf},
     stats::PipelineStats,
 };
 
@@ -336,6 +336,24 @@ impl CheckpointSchedule {
     }
 }
 
+/// One factorization setup shared across all workers and streaming batches.
+enum FactorizationTables {
+    Flat(Vec<u16>),
+    Segmented(BasePrimes),
+}
+
+impl FactorizationTables {
+    fn for_end(end: u64) -> Result<Self, String> {
+        if end <= FLAT_SPF_LIMIT {
+            Ok(Self::Flat(build_spf(
+                u32::try_from(end).expect("flat limit fits u32"),
+            )))
+        } else {
+            Ok(Self::Segmented(BasePrimes::for_end(end)?))
+        }
+    }
+}
+
 /// Collects a range using contiguous worker chunks and canonical merge order.
 pub fn collect_range(
     start: u64,
@@ -344,15 +362,14 @@ pub fn collect_range(
     dump_beyond: Stage,
 ) -> Result<RunOutput, String> {
     validate_range(start, end, threads)?;
-    let flat_spf = (end <= FLAT_SPF_LIMIT)
-        .then(|| build_spf(u32::try_from(end).expect("flat limit fits u32")));
+    let factorization = FactorizationTables::for_end(end)?;
     let context = CanonicalContext::new(&SIEVE_PRIMES, 31);
     collect_range_with_setup(
         start,
         end,
         threads,
         dump_beyond,
-        flat_spf.as_deref(),
+        &factorization,
         &context,
         None,
     )
@@ -367,15 +384,14 @@ pub fn collect_range_with_family_map(
     family_map: &TheoremMap,
 ) -> Result<RunOutput, String> {
     validate_range(start, end, threads)?;
-    let flat_spf = (end <= FLAT_SPF_LIMIT)
-        .then(|| build_spf(u32::try_from(end).expect("flat limit fits u32")));
+    let factorization = FactorizationTables::for_end(end)?;
     let context = CanonicalContext::new(&SIEVE_PRIMES, 31);
     let mut output = collect_range_with_setup(
         start,
         end,
         threads,
         dump_beyond,
-        flat_spf.as_deref(),
+        &factorization,
         &context,
         Some(family_map),
     )?;
@@ -400,15 +416,14 @@ pub fn collect_range_with_loaded_family_map(
     loaded: &LoadedTheoremMap,
 ) -> Result<RunOutput, String> {
     validate_range(start, end, threads)?;
-    let flat_spf = (end <= FLAT_SPF_LIMIT)
-        .then(|| build_spf(u32::try_from(end).expect("flat limit fits u32")));
+    let factorization = FactorizationTables::for_end(end)?;
     let context = CanonicalContext::new(&SIEVE_PRIMES, 31);
     let mut output = collect_range_with_setup(
         start,
         end,
         threads,
         dump_beyond,
-        flat_spf.as_deref(),
+        &factorization,
         &context,
         Some(loaded.map()),
     )?;
@@ -425,7 +440,7 @@ fn collect_range_with_setup(
     end: u64,
     threads: usize,
     dump_beyond: Stage,
-    flat_spf: Option<&[u16]>,
+    factorization: &FactorizationTables,
     context: &CanonicalContext,
     family_map: Option<&TheoremMap>,
 ) -> Result<RunOutput, String> {
@@ -454,12 +469,11 @@ fn collect_range_with_setup(
             .into_iter()
             .map(|(chunk_start, chunk_end)| {
                 let worker_context = context.clone();
-                let worker_spf = flat_spf.as_deref();
                 scope.spawn(move || {
                     collect_chunk(
                         chunk_start,
                         chunk_end,
-                        worker_spf,
+                        factorization,
                         &worker_context,
                         dump_beyond,
                         family_map,
@@ -557,13 +571,12 @@ pub fn stream_jsonl_range_with_progress_and_cancel(
 ) -> Result<StreamOutput, String> {
     validate_range(start, end, threads)?;
     let mut progress = progress;
-    let flat_spf = (end <= FLAT_SPF_LIMIT)
-        .then(|| build_spf(u32::try_from(end).expect("flat limit fits u32")));
+    let factorization = FactorizationTables::for_end(end)?;
     let context = CanonicalContext::new(&SIEVE_PRIMES, 31);
     let mut writer = JsonlWriter::new(path, false)?;
     stream_batches(
         &mut writer,
-        flat_spf.as_deref(),
+        &factorization,
         &context,
         start,
         end,
@@ -616,13 +629,12 @@ pub fn stream_jsonl_range_with_family_map_and_cancel(
     validate_range(start, end, threads)?;
     let premises = RunPremises::for_family_map(family_map)?;
     let run_hash = config_hash_with_premises("stream", &premises);
-    let flat_spf = (end <= FLAT_SPF_LIMIT)
-        .then(|| build_spf(u32::try_from(end).expect("flat limit fits u32")));
+    let factorization = FactorizationTables::for_end(end)?;
     let context = CanonicalContext::new(&SIEVE_PRIMES, 31);
     let mut writer = JsonlWriter::new(path, false)?;
     stream_batches(
         &mut writer,
-        flat_spf.as_deref(),
+        &factorization,
         &context,
         start,
         end,
@@ -657,13 +669,12 @@ pub fn stream_jsonl_range_with_loaded_family_map_and_cancel(
     validate_range(start, end, threads)?;
     let premises = RunPremises::for_loaded_family_map(loaded)?;
     let run_hash = config_hash_with_premises("stream", &premises);
-    let flat_spf = (end <= FLAT_SPF_LIMIT)
-        .then(|| build_spf(u32::try_from(end).expect("flat limit fits u32")));
+    let factorization = FactorizationTables::for_end(end)?;
     let context = CanonicalContext::new(&SIEVE_PRIMES, 31);
     let mut writer = JsonlWriter::new(path, false)?;
     stream_batches(
         &mut writer,
-        flat_spf.as_deref(),
+        &factorization,
         &context,
         start,
         end,
@@ -748,8 +759,7 @@ pub fn stream_jsonl_range_checkpointed_with_schedule_and_cancel(
 ) -> Result<StreamOutput, String> {
     validate_range(start, end, threads)?;
     let mut progress = progress;
-    let flat_spf = (end <= FLAT_SPF_LIMIT)
-        .then(|| build_spf(u32::try_from(end).expect("flat limit fits u32")));
+    let factorization = FactorizationTables::for_end(end)?;
     let context = CanonicalContext::new(&SIEVE_PRIMES, 31);
     let mut writer = JsonlWriter::new(output_path, false)?;
     let initial_checkpoint = Checkpoint::new_for_range(
@@ -763,7 +773,7 @@ pub fn stream_jsonl_range_checkpointed_with_schedule_and_cancel(
     write_checkpoint(checkpoint_path, &initial_checkpoint)?;
     stream_batches(
         &mut writer,
-        flat_spf.as_deref(),
+        &factorization,
         &context,
         start,
         end,
@@ -803,8 +813,7 @@ pub fn stream_jsonl_range_checkpointed_with_family_map_and_schedule_and_cancel(
     let mut progress = progress;
     let premises = RunPremises::for_family_map(family_map)?;
     let run_hash = config_hash_with_premises(config, &premises);
-    let flat_spf = (end <= FLAT_SPF_LIMIT)
-        .then(|| build_spf(u32::try_from(end).expect("flat limit fits u32")));
+    let factorization = FactorizationTables::for_end(end)?;
     let context = CanonicalContext::new(&SIEVE_PRIMES, 31);
     let mut writer = JsonlWriter::new(output_path, false)?;
     let initial_checkpoint = Checkpoint::new_for_run(
@@ -819,7 +828,7 @@ pub fn stream_jsonl_range_checkpointed_with_family_map_and_schedule_and_cancel(
     write_checkpoint(checkpoint_path, &initial_checkpoint)?;
     stream_batches(
         &mut writer,
-        flat_spf.as_deref(),
+        &factorization,
         &context,
         start,
         end,
@@ -884,8 +893,7 @@ pub fn stream_jsonl_range_checkpointed_with_loaded_family_map_and_schedule_and_c
     let mut progress = progress;
     let premises = RunPremises::for_loaded_family_map(loaded)?;
     let run_hash = config_hash_with_premises(config, &premises);
-    let flat_spf = (end <= FLAT_SPF_LIMIT)
-        .then(|| build_spf(u32::try_from(end).expect("flat limit fits u32")));
+    let factorization = FactorizationTables::for_end(end)?;
     let context = CanonicalContext::new(&SIEVE_PRIMES, 31);
     let mut writer = JsonlWriter::new(output_path, false)?;
     let initial_checkpoint = Checkpoint::new_for_run(
@@ -900,7 +908,7 @@ pub fn stream_jsonl_range_checkpointed_with_loaded_family_map_and_schedule_and_c
     write_checkpoint(checkpoint_path, &initial_checkpoint)?;
     stream_batches(
         &mut writer,
-        flat_spf.as_deref(),
+        &factorization,
         &context,
         start,
         end,
@@ -1483,8 +1491,7 @@ fn resume_stream_jsonl_range_with_run_and_schedule_and_cancel(
     }
 
     let mut progress = progress;
-    let flat_spf = (end <= FLAT_SPF_LIMIT)
-        .then(|| build_spf(u32::try_from(end).expect("flat limit fits u32")));
+    let factorization = FactorizationTables::for_end(end)?;
     let context = CanonicalContext::new(&SIEVE_PRIMES, 31);
     let range_start = if checkpoint.range_start == 0 {
         checkpoint.next_m
@@ -1499,7 +1506,7 @@ fn resume_stream_jsonl_range_with_run_and_schedule_and_cancel(
     let mut writer = JsonlWriter::new(output_path, true)?;
     stream_batches(
         &mut writer,
-        flat_spf.as_deref(),
+        &factorization,
         &context,
         range_start,
         range_end,
@@ -1618,7 +1625,7 @@ impl CheckpointScheduler {
 
 fn stream_batches<'a>(
     writer: &mut JsonlWriter<'a>,
-    flat_spf: Option<&[u16]>,
+    factorization: &FactorizationTables,
     context: &CanonicalContext,
     range_start: u64,
     range_end: u64,
@@ -1659,7 +1666,7 @@ fn stream_batches<'a>(
             batch_end,
             threads,
             dump_beyond,
-            flat_spf,
+            factorization,
             context,
             family_map,
         )?;
@@ -1810,33 +1817,38 @@ fn validate_persisted_family_records(
 fn collect_chunk(
     start: u64,
     end: u64,
-    flat_spf: Option<&[u16]>,
+    factorization: &FactorizationTables,
     context: &CanonicalContext,
     dump_beyond: Stage,
     family_map: Option<&TheoremMap>,
 ) -> RunOutput {
     let mut output = RunOutput::default();
-    if let Some(spf) = flat_spf {
-        for m in start..=end {
-            let candidate = Candidate::new(m, spf);
-            process_candidate(&mut output, context, candidate, dump_beyond, family_map);
-        }
-    } else {
-        let mut segment_start = start;
-        loop {
-            let segment_end =
-                end.min(segment_start.saturating_add(SEGMENT_WIDTH.saturating_sub(1)));
-            let segment = SegmentedSpf::new(segment_start, segment_end);
-            let mut factors = [crate::Factor::default(); crate::MAX_OMEGA];
-            for m in segment_start..=segment_end {
-                let omega = segment.factor_into(m, &mut factors);
-                let candidate = Candidate::from_factors(m, factors, omega);
+    match factorization {
+        FactorizationTables::Flat(spf) => {
+            for m in start..=end {
+                let candidate = Candidate::new(m, spf);
                 process_candidate(&mut output, context, candidate, dump_beyond, family_map);
             }
-            if segment_end == end {
-                break;
+        }
+        FactorizationTables::Segmented(base_primes) => {
+            let mut segment_start = start;
+            loop {
+                let segment_end =
+                    end.min(segment_start.saturating_add(SEGMENT_WIDTH.saturating_sub(1)));
+                let segment =
+                    SegmentedSpf::try_new_with_base_primes(segment_start, segment_end, base_primes)
+                        .expect("run base primes cover every segment");
+                let mut factors = [crate::Factor::default(); crate::MAX_OMEGA];
+                for m in segment_start..=segment_end {
+                    let omega = segment.factor_into(m, &mut factors);
+                    let candidate = Candidate::from_factors(m, factors, omega);
+                    process_candidate(&mut output, context, candidate, dump_beyond, family_map);
+                }
+                if segment_end == end {
+                    break;
+                }
+                segment_start = segment_end + 1;
             }
-            segment_start = segment_end + 1;
         }
     }
     output
@@ -1893,7 +1905,7 @@ fn write_records(path: &Path, records: &[SurvivorRecord], append: bool) -> Resul
 /// Partitions an inclusive root interval without using `end + 1` as a
 /// sentinel.
 pub fn partition_range(start: u64, end: u64, threads: usize) -> Result<Vec<(u64, u64)>, String> {
-    validate_range(start, end, threads)?;
+    validate_range_options(start, end, threads)?;
     let count = u128::from(end) - u128::from(start) + 1;
     let count_usize = usize::try_from(count).map_err(|_| {
         "requested interval is too large for the current process address space".to_owned()
@@ -1919,6 +1931,12 @@ pub fn partition_range(start: u64, end: u64, threads: usize) -> Result<Vec<(u64,
 }
 
 fn validate_range(start: u64, end: u64, threads: usize) -> Result<(), String> {
+    validate_range_options(start, end, threads)?;
+    crate::spf::base_prime_limit(end)?;
+    Ok(())
+}
+
+fn validate_range_options(start: u64, end: u64, threads: usize) -> Result<(), String> {
     if start < 2 {
         return Err("run start must be at least 2".to_owned());
     }
