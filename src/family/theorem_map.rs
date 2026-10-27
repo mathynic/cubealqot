@@ -6,10 +6,10 @@
 //! map.  Missing, incomplete, and unsupported certificates are reported and
 //! skipped, never represented as empty solution sets.
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashSet};
 
 use num_bigint::BigUint;
-use num_traits::{One, Zero};
+use num_traits::{One, ToPrimitive, Zero};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 
@@ -88,6 +88,8 @@ impl TheoremMapSnapshot {
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct TheoremMap {
     entries: BTreeMap<CanonicalInt, TheoremRecord>,
+    // Derived only from admitted records; never serialized or used to exclude.
+    native_cofactors: HashSet<u64>,
 }
 
 /// The trusted result of loading one immutable store snapshot.  The map is
@@ -199,6 +201,12 @@ impl TheoremMap {
         self.entries.is_empty()
     }
 
+    /// Negative pre-check for factored native roots. A hit still requires the
+    /// complete arbitrary-precision lookup and its existing witness checks.
+    pub(crate) fn contains_native_cofactor(&self, n: u64) -> bool {
+        self.native_cofactors.contains(&n)
+    }
+
     #[cfg(test)]
     pub(crate) fn test_only_single(n: &str, allowed_q: &[&str]) -> Self {
         let n = CanonicalInt::from_decimal(n).unwrap();
@@ -207,21 +215,17 @@ impl TheoremMap {
             .map(|q| CanonicalInt::from_decimal(q).unwrap())
             .collect::<Vec<_>>();
         allowed_q.sort();
-        Self {
-            entries: [(
-                n.clone(),
-                TheoremRecord {
-                    n,
-                    allowed_q,
-                    certificate_digest: "test-only-digest".to_owned(),
-                    rhs_version: 1,
-                    schema_version: 1,
-                    proof_kind: CertificateProofKind::Local,
-                },
-            )]
-            .into_iter()
-            .collect(),
-        }
+        let mut map = Self::new();
+        map.insert_record(TheoremRecord {
+            n,
+            allowed_q,
+            certificate_digest: "test-only-digest".to_owned(),
+            rhs_version: 1,
+            schema_version: 1,
+            proof_kind: CertificateProofKind::Local,
+        })
+        .unwrap();
+        map
     }
 
     /// Admit a complete certificate already verified by M7-13.  The
@@ -256,6 +260,9 @@ impl TheoremMap {
                 });
             }
             return Ok(());
+        }
+        if let Some(n) = record.n.as_bigint().to_u64() {
+            self.native_cofactors.insert(n);
         }
         self.entries.insert(record.n.clone(), record);
         Ok(())
@@ -690,14 +697,38 @@ mod tests {
     }
 
     #[test]
+    fn native_index_tracks_insertions_without_narrowing_wide_cofactors() {
+        let mut map = TheoremMap::new();
+        assert!(!map.contains_native_cofactor(3));
+        map.insert_record(test_record("3", "2")).unwrap();
+        map.insert_record(test_record("18446744073709551615", "2"))
+            .unwrap();
+        map.insert_record(test_record("18446744073709551618", "2"))
+            .unwrap();
+        map.insert_record(test_record("3", "2")).unwrap();
+        assert!(map.contains_native_cofactor(3));
+        assert!(map.contains_native_cofactor(u64::MAX));
+        assert!(!map.contains_native_cofactor(2));
+        assert_eq!(map.native_cofactors.len(), 2);
+        assert_eq!(map.len(), 3);
+        assert_eq!(map.clone(), map);
+
+        let n = CanonicalInt::from_decimal("18446744073709551618").unwrap();
+        let q = CanonicalInt::from_decimal("5").unwrap();
+        let m = CanonicalInt::from_decimal(&(n.as_bigint() * q.as_bigint()).to_string()).unwrap();
+        assert!(matches!(
+            map.lookup(&m, &n, &q),
+            LookupDecision::Excluded(_)
+        ));
+    }
+
+    #[test]
     fn test_only_wide_lookup_preserves_bigints_and_emits_witness() {
         let n = CanonicalInt::from_decimal("18446744073709551557").unwrap();
         let listed_q = CanonicalInt::from_decimal("18446744073709551533").unwrap();
         let mut map = TheoremMap::new();
-        map.entries.insert(
-            n.clone(),
-            test_record(&n.to_string(), &listed_q.to_string()),
-        );
+        map.insert_record(test_record(&n.to_string(), &listed_q.to_string()))
+            .unwrap();
         let listed_m =
             CanonicalInt::from_decimal(&(n.as_bigint() * listed_q.as_bigint()).to_string())
                 .unwrap();
@@ -735,10 +766,7 @@ mod tests {
     #[test]
     fn test_nonempty_membership_truth_table_covers_q_two_and_q_less_than_n() {
         let mut map = TheoremMap::new();
-        map.entries.insert(
-            CanonicalInt::from_decimal("3").unwrap(),
-            test_record("3", "2"),
-        );
+        map.insert_record(test_record("3", "2")).unwrap();
         let n = CanonicalInt::from_decimal("3").unwrap();
         let listed_q = CanonicalInt::from_decimal("2").unwrap();
         assert!(matches!(

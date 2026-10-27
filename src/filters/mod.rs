@@ -318,6 +318,14 @@ pub fn evaluate_ungated_with_family_map(
 /// Applies an admitted theorem map to the native factorization contract.
 /// No primality proof or certificate replay runs on this candidate path.
 pub fn lookup_family_map(map: &TheoremMap, candidate: &Candidate) -> Option<ExclusionWitness> {
+    // Established factors divide the native root exactly. If no eligible
+    // cofactor is admitted, no arbitrary-precision lookup can exclude it.
+    if !candidate.f[..candidate.omega as usize]
+        .iter()
+        .any(|factor| factor.e == 1 && map.contains_native_cofactor(candidate.m / factor.p))
+    {
+        return None;
+    }
     let m = CanonicalInt::from_decimal(&candidate.m.to_string())
         .expect("native candidate root must have canonical decimal form");
     for factor in candidate.f[..candidate.omega as usize]
@@ -865,6 +873,62 @@ mod tests {
         run_canonical_with_family_map,
     };
     use crate::{Candidate, build_spf};
+
+    /// Reference adapter from before the native negative pre-check.
+    fn lookup_without_native_index(
+        map: &TheoremMap,
+        candidate: &Candidate,
+    ) -> Option<crate::family::ExclusionWitness> {
+        use crate::family::{CanonicalInt, LookupDecision};
+        let m = CanonicalInt::from_decimal(&candidate.m.to_string()).unwrap();
+        for factor in candidate.f[..candidate.omega as usize]
+            .iter()
+            .filter(|f| f.e == 1)
+        {
+            let q = CanonicalInt::from_decimal(&factor.p.to_string()).unwrap();
+            let n =
+                CanonicalInt::from_decimal(&(m.as_bigint() / q.as_bigint()).to_string()).unwrap();
+            if n.as_bigint() <= &num_bigint::BigInt::from(1u8) {
+                continue;
+            }
+            if let LookupDecision::Excluded(witness) = map.lookup(&m, &n, &q) {
+                return Some(witness);
+            }
+        }
+        None
+    }
+
+    #[test]
+    fn native_family_precheck_matches_original_adapter_and_witnesses() {
+        let spf = build_spf(10_000);
+        let maps = [
+            TheoremMap::new(),
+            TheoremMap::test_only_single("3", &["2"]),
+            TheoremMap::test_only_single("5", &["3", "11"]),
+            TheoremMap::test_only_single("9", &["2"]),
+            TheoremMap::test_only_single("18446744073709551618", &["2"]),
+        ];
+        for map in &maps {
+            for m in 2u64..=10_000 {
+                let candidate = Candidate::new(m, &spf);
+                assert_eq!(
+                    lookup_family_map(map, &candidate),
+                    lookup_without_native_index(map, &candidate),
+                    "m={m}"
+                );
+            }
+            for p in [4_294_967_311u64, 2_305_843_041_732_208_837] {
+                let mut factors = [crate::Factor::default(); crate::MAX_OMEGA];
+                factors[0] = crate::Factor { p: 3, e: 1 };
+                factors[1] = crate::Factor { p, e: 1 };
+                let candidate = Candidate::from_factors(3 * p, factors, 2);
+                assert_eq!(
+                    lookup_family_map(map, &candidate),
+                    lookup_without_native_index(map, &candidate)
+                );
+            }
+        }
+    }
 
     #[test]
     fn prime_power_is_rejected_at_f1() {
