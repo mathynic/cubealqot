@@ -32,9 +32,12 @@ fn known_wide_factors_are_canonical_and_reconstruct_exactly() {
         (4_294_967_297u64, &[(641u64, 1), (6_700_417, 1)][..]),
         (809_964_431u64, &[(21_517u64, 1), (37_643, 1)][..]),
         (4_294_967_311u64, &[(4_294_967_311u64, 1)][..]),
+        // A packed small factor and a residual prime that cannot fit in u32.
+        (3 * 4_294_967_311u64, &[(3u64, 1), (4_294_967_311, 1)][..]),
         (12_884_901_888u64, &[(2u64, 32), (3, 1)][..]),
         (1u64 << 32, &[(2u64, 32)][..]),
         (1u64 << 40, &[(2u64, 40)][..]),
+        (1u64 << 43, &[(2u64, 43)][..]),
     ];
 
     for (m, expected) in cases {
@@ -51,6 +54,31 @@ fn known_wide_factors_are_canonical_and_reconstruct_exactly() {
         assert_eq!(reconstruct(&factors), u128::from(m), "m={m}");
         assert!(factors.iter().all(|factor| independently_prime(factor.p)));
     }
+}
+
+#[test]
+fn compact_slots_preserve_many_factors_and_large_prime_squares() {
+    let expected = [2u64, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37];
+    let m = expected.iter().product::<u64>();
+    let segment = SegmentedSpf::try_new(m, m).unwrap();
+    let factors = factors_for(&segment, m);
+    assert_eq!(factors.len(), expected.len());
+    for (factor, p) in factors.iter().zip(expected) {
+        assert_eq!(*factor, Factor { p, e: 1 });
+    }
+    assert_eq!(reconstruct(&factors), u128::from(m));
+
+    // Verify a prime near the configured maximum by independent trial division.
+    // Its square exercises a large packed prime and an exponent greater than one.
+    let mut p = u64::from(cubealqot::MAX_BASE_PRIME_LIMIT);
+    while !independently_prime(p) {
+        p -= 1;
+    }
+    let m = p * p;
+    let segment = SegmentedSpf::try_new(m, m).unwrap();
+    let factors = factors_for(&segment, m);
+    assert_eq!(factors, vec![Factor { p, e: 2 }]);
+    assert_eq!(reconstruct(&factors), u128::from(m));
 }
 
 #[test]

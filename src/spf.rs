@@ -12,6 +12,10 @@ pub const SEGMENT_WIDTH: u64 = 1 << 18;
 /// This supports controlled roots through approximately `3e6^2`.
 pub const MAX_BASE_PRIME_LIMIT: u32 = 3_000_000;
 
+// Packed entries reserve six bits for exponents. A larger configured horizon
+// must not silently overflow the remaining 26 prime bits.
+const _: () = assert!(MAX_BASE_PRIME_LIMIT <= u32::MAX >> 6);
+
 /// Checks the full run endpoint before segment allocation or worker startup.
 pub(crate) fn base_prime_limit(end: u64) -> Result<u32, String> {
     let root = crate::exact::isqrt(u128::from(end));
@@ -82,15 +86,16 @@ pub fn build(limit: u32) -> Vec<u16> {
 /// Factor data for one inclusive segment `[start, end]`.
 ///
 /// `rem` holds the residual after all base-prime divisions. `packed` is a
-/// fixed-width flat bag of `(prime << 6) | exponent` entries; six exponent
-/// bits represent the complete `u64`-domain exponent range `0..=63`.
+/// fixed-width flat bag of `u32` `(prime << 6) | exponent` entries. Only base
+/// primes enter this bag; wide residual primes stay in `rem` as `u64`. Six
+/// exponent bits represent the complete `u64`-domain range `0..=63`.
 #[derive(Clone, Debug)]
 pub struct SegmentedSpf {
     start: u64,
     end: u64,
     rem: Vec<u64>,
     counts: Vec<u8>,
-    packed: Vec<u64>,
+    packed: Vec<u32>,
 }
 
 impl SegmentedSpf {
@@ -131,7 +136,7 @@ impl SegmentedSpf {
             .map(|index| start + u64::try_from(index).expect("segment index fits in u64"))
             .collect::<Vec<_>>();
         let mut counts = vec![0u8; len];
-        let mut packed = vec![0u64; len * MAX_OMEGA];
+        let mut packed = vec![0u32; len * MAX_OMEGA];
 
         for &prime in &base_primes.primes {
             if prime > root {
@@ -151,8 +156,7 @@ impl SegmentedSpf {
                     let count = counts[index] as usize;
                     assert!(count < MAX_OMEGA, "factorization exceeds MAX_OMEGA");
                     assert!(exponent <= 63, "factor exponent exceeds packed width");
-                    packed[index * MAX_OMEGA + count] =
-                        (u64::from(prime) << 6) | u64::from(exponent);
+                    packed[index * MAX_OMEGA + count] = (prime << 6) | exponent;
                     counts[index] += 1;
                 }
                 multiple += u64::from(prime);
@@ -195,8 +199,8 @@ impl SegmentedSpf {
         for slot in 0..count {
             let encoded = self.packed[index * MAX_OMEGA + slot];
             out[slot] = Factor {
-                p: encoded >> 6,
-                e: u32::try_from(encoded & 0x3f).expect("packed exponent fits u32"),
+                p: u64::from(encoded >> 6),
+                e: encoded & 0x3f,
             };
         }
         if self.rem[index] > 1 {
