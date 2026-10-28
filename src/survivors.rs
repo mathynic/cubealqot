@@ -1870,7 +1870,7 @@ fn process_candidate(
     family_map: Option<&TheoremMap>,
 ) {
     let trace = filters::run_canonical_with_lazy_residues(context, &mut candidate, family_map);
-    output.stats.record(&trace);
+    output.stats.record_worker(&trace);
     let dump = match &trace.outcome {
         Outcome::Rejected { stage, .. } => stage.execution_index() >= dump_beyond.execution_index(),
         Outcome::Solution { .. } | Outcome::WideSolution { .. } => true,
@@ -1878,6 +1878,8 @@ fn process_candidate(
     if dump {
         // Early rejections still need complete residues for ungated record
         // diagnostics. Ordinary discarded candidates need no such vector.
+        // Materialize the canonical prefix only for a retained record.
+        let trace = trace.into_pipeline_trace();
         let residues = crate::tables::init_residues(&context.f4.sieve_primes, candidate.m);
         output.records.push(SurvivorRecord::from_trace(
             context,

@@ -176,17 +176,27 @@ pub fn cube_mod(root: u64, modulus: u64) -> u64 {
 pub fn s_mod(candidate: &Candidate, modulus: u128) -> u128 {
     if modulus.is_power_of_two() && modulus <= u128::from(u64::MAX) {
         // Wrapping modulo 2^64 preserves the low bits required modulo 2^k.
+        // Keep sigma intermediates unmasked until the final residue.
         // Wider moduli continue through the existing exact arithmetic below.
         let mask = modulus as u64 - 1;
         let mut sigma = 1u64;
         for factor in &candidate.f[..candidate.omega as usize] {
-            let mut term = 1u64;
-            let mut sum = 0u64;
-            for _ in 0..=3 * factor.e {
-                sum = sum.wrapping_add(term) & mask;
-                term = term.wrapping_mul(factor.p) & mask;
-            }
-            sigma = sigma.wrapping_mul(sum) & mask;
+            let sum = if factor.e == 1 {
+                // sigma(p^3) = (p + 1)(p^2 + 1), also modulo 2^64.
+                factor
+                    .p
+                    .wrapping_add(1)
+                    .wrapping_mul(factor.p.wrapping_mul(factor.p).wrapping_add(1))
+            } else {
+                let mut term = 1u64;
+                let mut sum = 0u64;
+                for _ in 0..=3 * factor.e {
+                    sum = sum.wrapping_add(term);
+                    term = term.wrapping_mul(factor.p);
+                }
+                sum
+            };
+            sigma = sigma.wrapping_mul(sum);
         }
         let cube = candidate
             .m

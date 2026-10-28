@@ -115,3 +115,35 @@ fn modular_paths_match_direct_biguint_sums_across_all_bit_tiers() {
         }
     }
 }
+
+#[test]
+fn power_of_two_sums_match_biguint_for_all_native_prime_power_exponents() {
+    for p in [2u64, 3, 5, 17, 65_537, 18_446_744_073_709_551_557] {
+        let mut m = p;
+        for exponent in 1..=63 {
+            let c = candidate(m, &[(p, exponent)]);
+            // Direct wide summation is independent of the factored formula
+            // and of wrapping arithmetic with deferred masks.
+            let mut term = BigUint::from(1u8);
+            let mut sigma = BigUint::from(0u8);
+            for _ in 0..=3 * exponent {
+                sigma += &term;
+                term *= p;
+            }
+            let s = sigma - BigUint::from(m).pow(3);
+            for bits in 0..128 {
+                let modulus = 1u128 << bits;
+                let expected = (&s % BigUint::from(modulus)).to_u128().unwrap();
+                assert_eq!(
+                    exact::s_mod(&c, modulus),
+                    expected,
+                    "p={p}, exponent={exponent}, bits={bits}"
+                );
+            }
+            let Some(next) = m.checked_mul(p) else {
+                break;
+            };
+            m = next;
+        }
+    }
+}

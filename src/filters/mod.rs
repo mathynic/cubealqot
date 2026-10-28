@@ -136,6 +136,38 @@ pub struct PipelineTrace {
     pub family_witness: Option<ExclusionWitness>,
 }
 
+/// Native canonical execution always visits a prefix of its enabled order.
+/// Keep that prefix implicit until a public trace or retained record needs
+/// an owned stage vector. This invariant does not apply to arbitrary public
+/// PipelineTrace values supplied by callers.
+#[derive(Debug)]
+pub(crate) struct WorkerTrace {
+    pub(crate) outcome: Outcome,
+    family_witness: Option<ExclusionWitness>,
+    family_enabled: bool,
+}
+
+impl WorkerTrace {
+    pub(crate) fn evaluated(&self) -> &'static [Stage] {
+        let stop = match &self.outcome {
+            Outcome::Rejected { stage, .. } => *stage,
+            _ => Stage::F8,
+        };
+        if self.family_enabled {
+            &FAMILY_STAGES[..=stop.execution_index()]
+        } else {
+            &Stage::ALL[..=stop.index()]
+        }
+    }
+    pub(crate) fn into_pipeline_trace(self) -> PipelineTrace {
+        PipelineTrace {
+            evaluated: self.evaluated().to_vec(),
+            outcome: self.outcome,
+            family_witness: self.family_witness,
+        }
+    }
+}
+
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct UngatedPredicates {
     pub evaluated: [Stage; 7],
@@ -365,16 +397,18 @@ pub fn run_canonical_with_family_map(
     family_map: Option<&TheoremMap>,
 ) -> PipelineTrace {
     run_canonical_with_residue_provider(context, candidate, || residues, family_map, false)
+        .into_pipeline_trace()
 }
 
 /// Native runner entry point. Modular residues are initialized only on F4
 /// entry, and F4 stops at the first decisive nonsquare. Diagnostic record
 /// construction reruns complete ungated analyses before reading scratch.
+/// Discarded candidates need no owned evaluated-stage vector.
 pub(crate) fn run_canonical_with_lazy_residues(
     context: &CanonicalContext,
     candidate: &mut Candidate,
     family_map: Option<&TheoremMap>,
-) -> PipelineTrace {
+) -> WorkerTrace {
     let m = candidate.m;
     run_canonical_with_residue_provider(
         context,
@@ -391,17 +425,12 @@ fn run_canonical_with_residue_provider<R: AsRef<[u32]>>(
     residues: impl FnOnce() -> R,
     family_map: Option<&TheoremMap>,
     fast_f4: bool,
-) -> PipelineTrace {
-    let mut evaluated = Vec::with_capacity(if family_map.is_some() {
-        FAMILY_STAGES.len()
-    } else {
-        Stage::ALL.len()
-    });
+) -> WorkerTrace {
+    let family_enabled = family_map.is_some();
 
-    evaluated.push(Stage::F1);
     if let Some(rejection) = f1(candidate) {
-        return PipelineTrace {
-            evaluated,
+        return WorkerTrace {
+            family_enabled,
             outcome: Outcome::Rejected {
                 stage: Stage::F1,
                 rejection,
@@ -410,20 +439,18 @@ fn run_canonical_with_residue_provider<R: AsRef<[u32]>>(
         };
     }
 
-    evaluated.push(Stage::F2);
     if let Some(rejection) = f2(candidate) {
-        return PipelineTrace {
-            evaluated,
+        return WorkerTrace {
+            family_enabled,
             outcome: Outcome::rejected_f2(rejection),
             family_witness: None,
         };
     }
 
     let family_witness = if let Some(map) = family_map {
-        evaluated.push(Stage::F7c);
         if let Some(witness) = lookup_family_map(map, candidate) {
-            return PipelineTrace {
-                evaluated,
+            return WorkerTrace {
+                family_enabled,
                 outcome: Outcome::Rejected {
                     stage: Stage::F7c,
                     rejection: Rejection::CertifiedFamilyExcluded,
@@ -436,10 +463,9 @@ fn run_canonical_with_residue_provider<R: AsRef<[u32]>>(
         None
     };
 
-    evaluated.push(Stage::F3);
     if let Some(rejection) = f3_adic3::f3_with_context(&context.f3, candidate) {
-        return PipelineTrace {
-            evaluated,
+        return WorkerTrace {
+            family_enabled,
             outcome: Outcome::Rejected {
                 stage: Stage::F3,
                 rejection,
@@ -448,7 +474,6 @@ fn run_canonical_with_residue_provider<R: AsRef<[u32]>>(
         };
     }
 
-    evaluated.push(Stage::F4);
     let residues = residues();
     let f4_result = if fast_f4 {
         f4_modsq::f4_short(&context.f4, candidate, residues.as_ref())
@@ -456,8 +481,8 @@ fn run_canonical_with_residue_provider<R: AsRef<[u32]>>(
         f4(&context.f4, candidate, residues.as_ref())
     };
     if let Some(rejection) = f4_result {
-        return PipelineTrace {
-            evaluated,
+        return WorkerTrace {
+            family_enabled,
             outcome: Outcome::Rejected {
                 stage: Stage::F4,
                 rejection,
@@ -466,19 +491,17 @@ fn run_canonical_with_residue_provider<R: AsRef<[u32]>>(
         };
     }
 
-    evaluated.push(Stage::F4b);
     if let Some(rejection) = f4b_foreign::f4b(&context.f4, candidate) {
-        return PipelineTrace {
-            evaluated,
+        return WorkerTrace {
+            family_enabled,
             outcome: Outcome::rejected_f4b(rejection),
             family_witness,
         };
     }
 
-    evaluated.push(Stage::F56);
     if let Some(rejection) = f56(candidate) {
-        return PipelineTrace {
-            evaluated,
+        return WorkerTrace {
+            family_enabled,
             outcome: Outcome::Rejected {
                 stage: Stage::F56,
                 rejection,
@@ -487,10 +510,9 @@ fn run_canonical_with_residue_provider<R: AsRef<[u32]>>(
         };
     }
 
-    evaluated.push(Stage::F7);
     if let Some(rejection) = f7_special::f7(&context.f7, candidate) {
-        return PipelineTrace {
-            evaluated,
+        return WorkerTrace {
+            family_enabled,
             outcome: Outcome::Rejected {
                 stage: Stage::F7,
                 rejection,
@@ -499,10 +521,9 @@ fn run_canonical_with_residue_provider<R: AsRef<[u32]>>(
         };
     }
 
-    evaluated.push(Stage::F8);
     let outcome = exact_outcome(exact::exact_s_exact(candidate));
-    PipelineTrace {
-        evaluated,
+    WorkerTrace {
+        family_enabled,
         outcome,
         family_witness,
     }
@@ -959,7 +980,8 @@ mod tests {
                     },
                     family_map,
                     true,
-                );
+                )
+                .into_pipeline_trace();
                 assert_eq!(actual, expected, "m={}", row.m);
                 assert_eq!(
                     calls.get(),
@@ -1161,5 +1183,70 @@ mod tests {
         let repeated_map = TheoremMap::test_only_single("6", &["2"]);
         // q=2 occurs with exponent two in 12 and must not be considered.
         assert!(lookup_family_map(&repeated_map, &repeated).is_none());
+    }
+}
+
+#[cfg(test)]
+mod worker_trace_tests {
+    use super::*;
+
+    #[test]
+    fn canonical_prefix_preserves_every_stop_solution_and_statistics() {
+        for family_enabled in [false, true] {
+            let order = if family_enabled {
+                &FAMILY_STAGES[..]
+            } else {
+                &Stage::ALL[..]
+            };
+            let mut outcomes = order
+                .iter()
+                .map(|&stage| {
+                    let rejection = match stage {
+                        Stage::F1 => Rejection::PrimePower,
+                        Stage::F2 => Rejection::Adic2OddVal,
+                        Stage::F7c => Rejection::CertifiedFamilyExcluded,
+                        Stage::F3 => Rejection::Adic3Nonsquare,
+                        Stage::F4 => Rejection::ModNonsquare,
+                        Stage::F4b => Rejection::ModZeroOddVal,
+                        Stage::F56 => Rejection::LocalFactorOddVal,
+                        Stage::F7 => Rejection::SpecialSumTwoSquares,
+                        Stage::F8 => Rejection::ExactNonsquare,
+                    };
+                    (
+                        Outcome::Rejected { stage, rejection },
+                        order.iter().position(|&s| s == stage).unwrap() + 1,
+                    )
+                })
+                .collect::<Vec<_>>();
+            outcomes.push((Outcome::solution(1), order.len()));
+            outcomes.push((
+                Outcome::WideSolution {
+                    y: crate::exact::ExactNat::from_biguint(
+                        num_bigint::BigUint::from(1u8) << 130usize,
+                    ),
+                },
+                order.len(),
+            ));
+
+            let mut worker_stats = crate::stats::PipelineStats::default();
+            let mut public_stats = crate::stats::PipelineStats::default();
+            for (outcome, reached) in outcomes {
+                let expected = PipelineTrace {
+                    evaluated: order[..reached].to_vec(),
+                    outcome: outcome.clone(),
+                    family_witness: None,
+                };
+                let trace = WorkerTrace {
+                    family_enabled,
+                    outcome,
+                    family_witness: None,
+                };
+                assert_eq!(trace.evaluated(), expected.evaluated);
+                worker_stats.record_worker(&trace);
+                public_stats.record(&expected);
+                assert_eq!(trace.into_pipeline_trace(), expected);
+                assert_eq!(worker_stats, public_stats);
+            }
+        }
     }
 }

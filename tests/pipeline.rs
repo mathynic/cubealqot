@@ -94,3 +94,24 @@ fn canonical_order_is_explicit_and_stable() {
     );
     assert_eq!(filters::CANONICAL_STAGES, Stage::ALL);
 }
+
+#[test]
+fn public_statistics_honor_explicit_stage_vectors() {
+    let mut stats = PipelineStats::default();
+    let trace = filters::PipelineTrace {
+        evaluated: vec![Stage::F4, Stage::F1, Stage::F4],
+        outcome: filters::Outcome::rejected_f4(),
+        family_witness: None,
+    };
+    stats.record(&trace);
+    assert_eq!(stats.tested, 1);
+    assert_eq!(stats.reached(Stage::F1), 1);
+    assert_eq!(stats.reached(Stage::F2), 0);
+    assert_eq!(stats.reached(Stage::F4), 2);
+    assert_eq!(stats.rejected_at(Stage::F4), 1);
+    assert_eq!(
+        stats.rejection_reasons.get(&Rejection::ModNonsquare),
+        Some(&1)
+    );
+    assert!(stats.family.is_none());
+}

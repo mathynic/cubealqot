@@ -131,13 +131,23 @@ pub fn f3(candidate: &mut Candidate) -> Option<Rejection> {
 
 /// Applies F3 using a reusable modulus-3 table context.
 pub fn f3_with_context(context: &F3Context, candidate: &mut Candidate) -> Option<Rejection> {
-    let analysis = analyze_with_context(context, candidate);
-    match analysis.s_mod3 {
+    // The rejection test does not need the diagnostic v3(sigma) value.
+    let sig3 = candidate.f[..candidate.omega as usize]
+        .iter()
+        .map(|factor| context.sigma3.sigma(factor.p, factor.e))
+        .fold(1u32, |product, term| product * term % 3);
+    // m^3 == m modulo 3 for every integer m.
+    let s_mod3 = (sig3 + 3 - (candidate.m % 3) as u32) % 3;
+    match s_mod3 {
         2 => Some(Rejection::Adic3Nonsquare),
         1 => None,
-        0 if analysis.v3_s % 2 == 1 => Some(Rejection::Adic3OddVal),
-        0 if analysis.unit3 != 1 => Some(Rejection::Adic3BadUnit),
-        0 => None,
+        0 => {
+            let v = v_of_s_at(candidate, 3, 2, CAP3);
+            if v % 2 == 1 {
+                return Some(Rejection::Adic3OddVal);
+            }
+            (unit3_of_s(candidate, v) != 1).then_some(Rejection::Adic3BadUnit)
+        }
         _ => unreachable!(),
     }
 }

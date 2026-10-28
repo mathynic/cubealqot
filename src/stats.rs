@@ -25,8 +25,17 @@ pub struct PipelineStats {
 
 impl PipelineStats {
     pub fn record(&mut self, trace: &PipelineTrace) {
+        self.record_parts(&trace.evaluated, &trace.outcome);
+    }
+
+    /// Records the native canonical prefix without constructing an owned trace.
+    pub(crate) fn record_worker(&mut self, trace: &crate::filters::WorkerTrace) {
+        self.record_parts(trace.evaluated(), &trace.outcome);
+    }
+
+    fn record_parts(&mut self, evaluated: &[Stage], outcome: &Outcome) {
         self.tested += 1;
-        for &stage in &trace.evaluated {
+        for &stage in evaluated {
             if stage == Stage::F7c {
                 self.family
                     .get_or_insert_with(FamilyStageStats::default)
@@ -36,7 +45,7 @@ impl PipelineStats {
             }
         }
 
-        match &trace.outcome {
+        match outcome {
             Outcome::Rejected { stage, rejection } => {
                 if *stage == Stage::F7c {
                     self.family
