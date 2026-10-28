@@ -147,18 +147,19 @@ impl SegmentedSpf {
             while multiple <= u64::from(end) {
                 let index = usize::try_from(multiple - u64::from(start))
                     .expect("segment offset fits in usize");
-                let mut exponent = 0u32;
+                // This is a multiple of prime, and divisions by earlier
+                // distinct primes cannot remove its first prime factor.
+                rem[index] /= u64::from(prime);
+                let mut exponent = 1u32;
                 while rem[index] % u64::from(prime) == 0 {
                     rem[index] /= u64::from(prime);
                     exponent += 1;
                 }
-                if exponent != 0 {
-                    let count = counts[index] as usize;
-                    assert!(count < MAX_OMEGA, "factorization exceeds MAX_OMEGA");
-                    assert!(exponent <= 63, "factor exponent exceeds packed width");
-                    packed[index * MAX_OMEGA + count] = (prime << 6) | exponent;
-                    counts[index] += 1;
-                }
+                let count = counts[index] as usize;
+                assert!(count < MAX_OMEGA, "factorization exceeds MAX_OMEGA");
+                assert!(exponent <= 63, "factor exponent exceeds packed width");
+                packed[index * MAX_OMEGA + count] = (prime << 6) | exponent;
+                counts[index] += 1;
                 multiple += u64::from(prime);
             }
         }
@@ -297,6 +298,55 @@ mod tests {
             let mut actual = [Factor::default(); MAX_OMEGA];
             let count = segment.factor_into(m, &mut actual);
             assert_eq!(&actual[..count as usize], expected);
+        }
+    }
+
+    #[test]
+    fn guaranteed_division_preserves_prime_powers_and_mixed_multiplicities() {
+        let end = (u64::from(MAX_BASE_PRIME_LIMIT) + 1).pow(2) - 1;
+        let base_primes = BasePrimes::for_end(end).unwrap();
+        let largest_prime = u64::from(*base_primes.primes.last().unwrap());
+        for p in [2u64, 3, 5, 7, 11, 65_537, 2_000_003, largest_prime] {
+            let mut power = p;
+            for exponent in 1..=63 {
+                if power > end {
+                    break;
+                }
+                // The mixed case also checks that stripping earlier primes
+                // leaves the full multiplicity of the current prime intact.
+                let other = if p == 2 { 3 } else { 2 };
+                for multiplier in [1, other] {
+                    let Some(m) = power.checked_mul(multiplier).filter(|&m| m <= end) else {
+                        continue;
+                    };
+                    let segment =
+                        SegmentedSpf::try_new_with_base_primes(m, m, &base_primes).unwrap();
+                    let mut expected = vec![Factor { p, e: exponent }];
+                    if multiplier != 1 {
+                        expected.push(Factor { p: other, e: 1 });
+                    }
+                    expected.sort_by_key(|factor| factor.p);
+                    let mut actual = [Factor {
+                        p: u64::MAX,
+                        e: u32::MAX,
+                    }; MAX_OMEGA];
+                    let count = segment.factor_into(m, &mut actual) as usize;
+                    assert_eq!(&actual[..count], expected, "m={m}");
+                    assert!(
+                        actual[count..]
+                            .iter()
+                            .all(|factor| *factor == Factor::default())
+                    );
+                    let reconstructed = actual[..count].iter().fold(1u128, |product, factor| {
+                        product * u128::from(factor.p).pow(factor.e)
+                    });
+                    assert_eq!(reconstructed, u128::from(m), "m={m}");
+                }
+                let Some(next) = power.checked_mul(p) else {
+                    break;
+                };
+                power = next;
+            }
         }
     }
 

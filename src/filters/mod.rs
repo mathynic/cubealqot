@@ -400,8 +400,8 @@ pub fn run_canonical_with_family_map(
         .into_pipeline_trace()
 }
 
-/// Native runner entry point. Modular residues are initialized only on F4
-/// entry, and F4 stops at the first decisive nonsquare. Diagnostic record
+/// Native runner entry point. F4 computes input residues only for visited
+/// primes and stops at the first decisive nonsquare. Diagnostic record
 /// construction reruns complete ungated analyses before reading scratch.
 /// Discarded candidates need no owned evaluated-stage vector.
 pub(crate) fn run_canonical_with_lazy_residues(
@@ -409,14 +409,7 @@ pub(crate) fn run_canonical_with_lazy_residues(
     candidate: &mut Candidate,
     family_map: Option<&TheoremMap>,
 ) -> WorkerTrace {
-    let m = candidate.m;
-    run_canonical_with_residue_provider(
-        context,
-        candidate,
-        || crate::tables::init_residues(&context.f4.sieve_primes, m),
-        family_map,
-        true,
-    )
+    run_canonical_with_residue_provider(context, candidate, || &[] as &[u32], family_map, true)
 }
 
 fn run_canonical_with_residue_provider<R: AsRef<[u32]>>(
@@ -474,10 +467,10 @@ fn run_canonical_with_residue_provider<R: AsRef<[u32]>>(
         };
     }
 
-    let residues = residues();
     let f4_result = if fast_f4 {
-        f4_modsq::f4_short(&context.f4, candidate, residues.as_ref())
+        f4_modsq::f4_short(&context.f4, candidate)
     } else {
+        let residues = residues();
         f4(&context.f4, candidate, residues.as_ref())
     };
     if let Some(rejection) = f4_result {
@@ -983,12 +976,7 @@ mod tests {
                 )
                 .into_pipeline_trace();
                 assert_eq!(actual, expected, "m={}", row.m);
-                assert_eq!(
-                    calls.get(),
-                    usize::from(actual.evaluated.contains(&Stage::F4)),
-                    "m={}",
-                    row.m
-                );
+                assert_eq!(calls.get(), 0, "m={}", row.m);
                 if let Outcome::Rejected { stage, .. } = actual.outcome {
                     seen.insert(stage);
                     if stage == Stage::F4 {
