@@ -96,6 +96,15 @@ pub fn analyze(candidate: &mut Candidate) -> F2Analysis {
 
 /// Applies the complete 2-local square condition.
 pub fn f2(candidate: &mut Candidate) -> Option<Rejection> {
+    if candidate.a2 == 0
+        && candidate.f[..candidate.omega as usize]
+            .iter()
+            .any(|factor| factor.e % 2 == 1)
+    {
+        // For odd m, an odd factor exponent makes sigma(m^3) even.
+        // Hence S is odd, and only its unit modulo 8 needs checking.
+        return (unit8_of_s(candidate, 0) != 1).then_some(Rejection::Adic2BadUnit);
+    }
     let v_sigma = v2_sigma(candidate);
     let k = 3 * u32::from(candidate.a2);
     let v2_s = if v_sigma == k {

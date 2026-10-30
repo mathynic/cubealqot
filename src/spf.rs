@@ -143,6 +143,21 @@ impl SegmentedSpf {
                 break;
             }
             let first = u64::from(start).div_ceil(u64::from(prime)) * u64::from(prime);
+            if prime == 2 {
+                // Two is the first base prime. Each visited residual is
+                // positive and even, so its full exponent is in 1..=63.
+                let mut multiple = first;
+                while multiple <= end {
+                    let index =
+                        usize::try_from(multiple - start).expect("segment offset fits in usize");
+                    let exponent = rem[index].trailing_zeros();
+                    rem[index] >>= exponent;
+                    packed[index * MAX_OMEGA] = (prime << 6) | exponent;
+                    counts[index] = 1;
+                    multiple += 2;
+                }
+                continue;
+            }
             let mut multiple = first;
             while multiple <= u64::from(end) {
                 let index = usize::try_from(multiple - u64::from(start))
@@ -252,6 +267,60 @@ fn primes_up_to(limit: u32) -> Vec<u32> {
 mod tests {
     use super::{BasePrimes, MAX_BASE_PRIME_LIMIT, SegmentedSpf, base_prime_limit, build_spf};
     use crate::{Factor, MAX_OMEGA, factor::factor_into};
+
+    #[test]
+    fn factor_two_stripping_preserves_alignment_multiplicity_and_residuals() {
+        let flat = build_spf(65_552);
+        for (start, end) in [
+            (2u64, 2),
+            (3, 3),
+            (4, 4),
+            (7, 8),
+            (8, 9),
+            (15, 32),
+            (65_531, 65_552),
+        ] {
+            let segment = SegmentedSpf::new(start, end);
+            for m in start..=end {
+                let mut expected = [Factor::default(); MAX_OMEGA];
+                let mut actual = [Factor {
+                    p: u64::MAX,
+                    e: u32::MAX,
+                }; MAX_OMEGA];
+                let expected_count = factor_into(m, &flat, &mut expected);
+                assert_eq!(segment.factor_into(m, &mut actual), expected_count, "m={m}");
+                assert_eq!(actual, expected, "m={m}");
+            }
+        }
+        let base = BasePrimes::for_end(1u64 << 43).unwrap();
+        for (m, expected) in [
+            (1u64 << 43, vec![Factor { p: 2, e: 43 }]),
+            (
+                3 * (1u64 << 40),
+                vec![Factor { p: 2, e: 40 }, Factor { p: 3, e: 1 }],
+            ),
+            (
+                2 * 4_294_967_311u64,
+                vec![
+                    Factor { p: 2, e: 1 },
+                    Factor {
+                        p: 4_294_967_311,
+                        e: 1,
+                    },
+                ],
+            ),
+        ] {
+            let segment = SegmentedSpf::try_new_with_base_primes(m, m, &base).unwrap();
+            let mut actual = [Factor::default(); MAX_OMEGA];
+            let count = segment.factor_into(m, &mut actual) as usize;
+            assert_eq!(&actual[..count], expected, "m={m}");
+            assert!(
+                actual[count..]
+                    .iter()
+                    .all(|factor| *factor == Factor::default())
+            );
+        }
+    }
 
     #[test]
     fn shared_base_primes_match_flat_factorizations_across_segments() {
