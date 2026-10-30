@@ -1216,7 +1216,7 @@ mod worker_trace_tests {
                 order.len(),
             ));
 
-            let mut worker_stats = crate::stats::PipelineStats::default();
+            let mut worker_stats = crate::stats::CanonicalStats::new(family_enabled);
             let mut public_stats = crate::stats::PipelineStats::default();
             for (outcome, reached) in outcomes {
                 let expected = PipelineTrace {
@@ -1230,10 +1230,10 @@ mod worker_trace_tests {
                     family_witness: None,
                 };
                 assert_eq!(trace.evaluated(), expected.evaluated);
-                worker_stats.record_worker(&trace);
+                worker_stats.record(&trace.outcome);
                 public_stats.record(&expected);
                 assert_eq!(trace.into_pipeline_trace(), expected);
-                assert_eq!(worker_stats, public_stats);
+                assert_eq!(worker_stats.clone().finish(), public_stats);
             }
         }
     }

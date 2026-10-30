@@ -61,6 +61,27 @@ impl Candidate {
         }
     }
 
+    /// Reuses worker storage after factorization has replaced `self.f`,
+    /// including its inactive slots. Keep capacities but discard all data
+    /// and exact caches belonging to the previous root.
+    #[inline]
+    pub(crate) fn reset_after_factorization(&mut self, m: Root, omega: u8) {
+        assert!(m > 0, "candidate input must be positive");
+        assert!((omega as usize) <= MAX_OMEGA, "invalid factor count");
+        self.m = m;
+        self.omega = omega;
+        self.a2 = if omega > 0 && self.f[0].p == 2 {
+            self.f[0].e as u8
+        } else {
+            0
+        };
+        self.s_mod_sieve.clear();
+        self.foreign_zeros.clear();
+        self.cross_val.fill(0);
+        self.s_cache = None;
+        self.exact_s_cache = None;
+    }
+
     /// Returns `m^3` in the exact arithmetic type used by the baseline.
     pub fn m3(&self) -> u128 {
         u128::from(self.m)
@@ -118,6 +139,41 @@ pub fn factor_into(m: impl Into<Root>, spf: &[u16], out: &mut [Factor; MAX_OMEGA
 mod tests {
     use super::{Factor, MAX_OMEGA, factor_into};
     use crate::spf::build_spf;
+
+    #[test]
+    fn reused_candidate_resets_every_scratch_field_and_keeps_vector_capacity() {
+        let spf = build_spf(72);
+        let mut candidate = super::Candidate::new(72u64, &spf);
+        for m in [45u64, 18, 7, 64, 3] {
+            candidate.s_mod_sieve = vec![97; 23];
+            candidate.foreign_zeros = vec![0, 2, 4];
+            candidate.cross_val.fill(u32::MAX);
+            candidate.s_cache = Some(123);
+            candidate.exact_s_cache = Some(crate::exact::ExactNat::from_biguint(
+                num_bigint::BigUint::from(1u8) << 200usize,
+            ));
+            let sieve_capacity = candidate.s_mod_sieve.capacity();
+            let zero_capacity = candidate.foreign_zeros.capacity();
+            let sieve_pointer = candidate.s_mod_sieve.as_ptr();
+            let zero_pointer = candidate.foreign_zeros.as_ptr();
+            let omega = factor_into(m, &spf, &mut candidate.f);
+            candidate.reset_after_factorization(m, omega);
+            let fresh = super::Candidate::new(m, &spf);
+            assert_eq!(candidate.m, fresh.m);
+            assert_eq!(candidate.f, fresh.f);
+            assert_eq!(candidate.omega, fresh.omega);
+            assert_eq!(candidate.a2, fresh.a2);
+            assert_eq!(candidate.cross_val, fresh.cross_val);
+            assert_eq!(candidate.s_cache, fresh.s_cache);
+            assert_eq!(candidate.exact_s_cache, fresh.exact_s_cache);
+            assert_eq!(candidate.s_mod_sieve, fresh.s_mod_sieve);
+            assert_eq!(candidate.foreign_zeros, fresh.foreign_zeros);
+            assert_eq!(candidate.s_mod_sieve.capacity(), sieve_capacity);
+            assert_eq!(candidate.foreign_zeros.capacity(), zero_capacity);
+            assert_eq!(candidate.s_mod_sieve.as_ptr(), sieve_pointer);
+            assert_eq!(candidate.foreign_zeros.as_ptr(), zero_pointer);
+        }
+    }
 
     #[test]
     fn one_has_no_factors() {

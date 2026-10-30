@@ -16,7 +16,7 @@ use crate::{
     filters::{self, CanonicalContext, FamilyTag, Outcome, PipelineTrace, Rejection, Stage},
     numth::legendre,
     spf::{BasePrimes, FLAT_SPF_LIMIT, SEGMENT_WIDTH, SegmentedSpf},
-    stats::PipelineStats,
+    stats::{CanonicalStats, PipelineStats},
 };
 
 /// Version of the persistence contract that records theorem-map premises.
@@ -1831,11 +1831,22 @@ fn collect_chunk(
     family_map: Option<&TheoremMap>,
 ) -> RunOutput {
     let mut output = RunOutput::default();
+    let mut canonical_stats = CanonicalStats::new(family_map.is_some());
+    let mut candidate =
+        Candidate::from_factors(start, [crate::Factor::default(); crate::MAX_OMEGA], 0);
     match factorization {
         FactorizationTables::Flat(spf) => {
             for m in start..=end {
-                let candidate = Candidate::new(m, spf);
-                process_candidate(&mut output, context, candidate, dump_beyond, family_map);
+                let omega = crate::factor::factor_into(m, spf, &mut candidate.f);
+                candidate.reset_after_factorization(m, omega);
+                process_candidate(
+                    &mut output,
+                    context,
+                    &mut candidate,
+                    dump_beyond,
+                    family_map,
+                    &mut canonical_stats,
+                );
             }
         }
         FactorizationTables::Segmented(base_primes) => {
@@ -1846,11 +1857,17 @@ fn collect_chunk(
                 let segment =
                     SegmentedSpf::try_new_with_base_primes(segment_start, segment_end, base_primes)
                         .expect("run base primes cover every segment");
-                let mut factors = [crate::Factor::default(); crate::MAX_OMEGA];
                 for m in segment_start..=segment_end {
-                    let omega = segment.factor_into(m, &mut factors);
-                    let candidate = Candidate::from_factors(m, factors, omega);
-                    process_candidate(&mut output, context, candidate, dump_beyond, family_map);
+                    let omega = segment.factor_into(m, &mut candidate.f);
+                    candidate.reset_after_factorization(m, omega);
+                    process_candidate(
+                        &mut output,
+                        context,
+                        &mut candidate,
+                        dump_beyond,
+                        family_map,
+                        &mut canonical_stats,
+                    );
                 }
                 if segment_end == end {
                     break;
@@ -1859,18 +1876,20 @@ fn collect_chunk(
             }
         }
     }
+    output.stats = canonical_stats.finish();
     output
 }
 
 fn process_candidate(
     output: &mut RunOutput,
     context: &CanonicalContext,
-    mut candidate: Candidate,
+    candidate: &mut Candidate,
     dump_beyond: Stage,
     family_map: Option<&TheoremMap>,
+    canonical_stats: &mut CanonicalStats,
 ) {
-    let trace = filters::run_canonical_with_lazy_residues(context, &mut candidate, family_map);
-    output.stats.record_worker(&trace);
+    let trace = filters::run_canonical_with_lazy_residues(context, candidate, family_map);
+    canonical_stats.record(&trace.outcome);
     let dump = match &trace.outcome {
         Outcome::Rejected { stage, .. } => stage.execution_index() >= dump_beyond.execution_index(),
         Outcome::Solution { .. } | Outcome::WideSolution { .. } => true,
@@ -1882,10 +1901,7 @@ fn process_candidate(
         let trace = trace.into_pipeline_trace();
         let residues = crate::tables::init_residues(&context.f4.sieve_primes, candidate.m);
         output.records.push(SurvivorRecord::from_trace(
-            context,
-            &mut candidate,
-            &residues,
-            &trace,
+            context, candidate, &residues, &trace,
         ));
     }
 }
@@ -1967,6 +1983,76 @@ mod tests {
     };
     use crate::filters::Stage;
     use std::time::Duration;
+
+    #[test]
+    fn reused_worker_candidates_match_fresh_complete_diagnostics_and_statistics() {
+        let ranges = [
+            (2u64, 2048u64),
+            (4_294_967_288, 4_294_967_304),
+            (3_480_818_220_231, 3_480_818_220_247),
+        ];
+        let base = crate::spf::BasePrimes::for_end(ranges[2].1).unwrap();
+        let tables = super::FactorizationTables::Segmented(base);
+        let super::FactorizationTables::Segmented(base) = &tables else {
+            unreachable!()
+        };
+        let context = crate::filters::CanonicalContext::new(&super::SIEVE_PRIMES, 63);
+        let map = crate::family::TheoremMap::test_only_single("5", &["11"]);
+        for family_map in [None, Some(&map)] {
+            for (start, end) in ranges {
+                let segment =
+                    crate::spf::SegmentedSpf::try_new_with_base_primes(start, end, base).unwrap();
+                let mut expected_stats = crate::stats::PipelineStats::default();
+                let mut expected_records = Vec::new();
+                for m in start..=end {
+                    let mut factors = [crate::Factor::default(); crate::MAX_OMEGA];
+                    let omega = segment.factor_into(m, &mut factors);
+                    let mut candidate = crate::Candidate::from_factors(m, factors, omega);
+                    let residues = crate::tables::init_residues(&context.f4.sieve_primes, m);
+                    let trace = crate::filters::run_canonical_with_family_map(
+                        &context,
+                        &mut candidate,
+                        &residues,
+                        family_map,
+                    );
+                    expected_stats.record(&trace);
+                    expected_records.push(super::SurvivorRecord::from_trace(
+                        &context,
+                        &mut candidate,
+                        &residues,
+                        &trace,
+                    ));
+                }
+                let flat = (end <= 2048)
+                    .then(|| super::FactorizationTables::Flat(crate::build_spf(end as u32)));
+                for factorization in std::iter::once(&tables).chain(flat.as_ref()) {
+                    for dump in [Stage::F1, Stage::F8] {
+                        let actual = super::collect_chunk(
+                            start,
+                            end,
+                            factorization,
+                            &context,
+                            dump,
+                            family_map,
+                        );
+                        let expected = expected_records
+                            .iter()
+                            .filter(|record| dump == Stage::F1 || record.stage == Stage::F8)
+                            .cloned()
+                            .collect::<Vec<_>>();
+                        assert_eq!(
+                            actual.stats, expected_stats,
+                            "range={start}..={end}, dump={dump:?}"
+                        );
+                        assert_eq!(
+                            actual.records, expected,
+                            "range={start}..={end}, dump={dump:?}"
+                        );
+                    }
+                }
+            }
+        }
+    }
 
     #[test]
     fn large_compute_batches_land_exactly_on_candidate_checkpoints() {
