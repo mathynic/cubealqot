@@ -208,3 +208,68 @@ fn lean_predicate_preserves_wide_and_exact_fallback_cases() {
         );
     }
 }
+
+#[test]
+fn first_nonzero_tiers_and_units_match_biguint_through_the_cap() {
+    let context = F3Context::default();
+    // For m=3*p, these prime fixtures cover both units at every valuation
+    // through CAP3. Valuation 11 resolves at the last modular tier; 12 must
+    // use the exact fallback even though its unit can be found at tier 13.
+    for (p, v, unit) in [
+        (5u64, 1u32, 1u8),
+        (11, 1, 2),
+        (17, 2, 1),
+        (89, 2, 2),
+        (647, 3, 1),
+        (53, 3, 2),
+        (431, 4, 1),
+        (107, 4, 2),
+        (2699, 5, 1),
+        (269, 5, 2),
+        (2213, 6, 1),
+        (3671, 6, 2),
+        (18251, 7, 1),
+        (35747, 7, 2),
+        (13877, 8, 1),
+        (184463, 8, 2),
+        (1339199, 9, 1),
+        (433781, 9, 2),
+        (1299833, 10, 1),
+        (355049, 10, 2),
+        (18187847, 11, 1),
+        (473147, 11, 2),
+        (33776783, 12, 1),
+        (15707789, 12, 2),
+    ] {
+        let mut factors = [Factor::default(); MAX_OMEGA];
+        factors[0] = Factor { p: 3, e: 1 };
+        factors[1] = Factor { p, e: 1 };
+        let mut candidate = Candidate::from_factors(3 * p, factors, 2);
+        let s = exact::exact_s_big(&candidate);
+        assert_eq!(direct_v3_and_unit(s.clone()), (v, unit), "p={p}");
+        assert_eq!(
+            (&s % BigUint::from(3u128.pow(v + 1))).to_u128().unwrap(),
+            u128::from(unit) * 3u128.pow(v),
+            "first nonzero residue: p={p}"
+        );
+        let expected = if v % 2 == 1 {
+            Some(Rejection::Adic3OddVal)
+        } else if unit != 1 {
+            Some(Rejection::Adic3BadUnit)
+        } else {
+            None
+        };
+        assert_eq!(
+            f3_adic3::f3_with_context(&context, &mut candidate),
+            expected,
+            "p={p}"
+        );
+        assert_eq!(
+            candidate.exact_s_cache.is_some(),
+            v >= f3_adic3::CAP3,
+            "p={p}"
+        );
+        assert_eq!(candidate.s_cache.is_some(), v >= f3_adic3::CAP3, "p={p}");
+        check_predicate_and_analysis(&context, Candidate::from_factors(3 * p, factors, 2));
+    }
+}

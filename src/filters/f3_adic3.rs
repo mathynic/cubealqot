@@ -142,7 +142,24 @@ pub fn f3_with_context(context: &F3Context, candidate: &mut Candidate) -> Option
         2 => Some(Rejection::Adic3Nonsquare),
         1 => None,
         0 => {
-            let v = v_of_s_at(candidate, 3, 2, CAP3);
+            let mut modulus = 9u128;
+            for _ in 2..=CAP3 {
+                let residue = exact::s_mod(candidate, modulus);
+                if residue != 0 {
+                    let v = valuation(residue, 3);
+                    if v % 2 == 1 {
+                        return Some(Rejection::Adic3OddVal);
+                    }
+                    // A nonzero residue modulo 3^t has v < t, so it
+                    // already determines (S / 3^v) mod 3 as well.
+                    let unit = (residue / 3u128.pow(v)) % 3;
+                    return (unit != 1).then_some(Rejection::Adic3BadUnit);
+                }
+                modulus *= 3;
+            }
+            // Every tier vanished: retain the existing exact-S fallback
+            // and unit helper, including their cache behavior.
+            let v = exact_s_cached(candidate).valuation(3);
             if v % 2 == 1 {
                 return Some(Rejection::Adic3OddVal);
             }
