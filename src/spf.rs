@@ -8,9 +8,9 @@ pub const FLAT_SPF_LIMIT: u64 = 100_000_000;
 /// Default segmented width, chosen to keep the packed factor bag cache-sized.
 pub const SEGMENT_WIDTH: u64 = 1 << 18;
 
-/// Largest base-prime bound currently prepared for segmented factorization.
-/// This supports controlled roots through approximately `3e6^2`.
-pub const MAX_BASE_PRIME_LIMIT: u32 = 3_000_000;
+/// Largest base prime representable in a packed factor entry. Runs prepare
+/// only the primes needed for their endpoint, up to this 26-bit bound.
+pub const MAX_BASE_PRIME_LIMIT: u32 = u32::MAX >> 6;
 
 // Packed entries reserve six bits for exponents. A larger configured horizon
 // must not silently overflow the remaining 26 prime bits.
@@ -355,12 +355,21 @@ mod tests {
 
     #[test]
     fn shared_wide_table_covers_prime_squares_and_the_campaign_endpoint() {
-        let base_primes = BasePrimes::for_end(5_000_000_000_000).unwrap();
+        let base_primes = BasePrimes::for_end(11_000_000_000_000).unwrap();
         for (m, expected) in [
             (2_000_003u64.pow(2), vec![Factor { p: 2_000_003, e: 2 }]),
+            (3_000_017u64.pow(2), vec![Factor { p: 3_000_017, e: 2 }]),
             (
                 5_000_000_000_000,
                 vec![Factor { p: 2, e: 12 }, Factor { p: 5, e: 13 }],
+            ),
+            (
+                11_000_000_000_000,
+                vec![
+                    Factor { p: 2, e: 12 },
+                    Factor { p: 5, e: 12 },
+                    Factor { p: 11, e: 1 },
+                ],
             ),
         ] {
             let segment = SegmentedSpf::try_new_with_base_primes(m, m, &base_primes).unwrap();

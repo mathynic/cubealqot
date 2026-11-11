@@ -272,7 +272,7 @@ fn interrupted_flat_run_resumes_without_gaps_or_duplicates() {
 
 #[test]
 fn wide_prime_square_boundary_resumes_with_shared_coverage_and_new_worker_count() {
-    let start = 2_000_003u64.pow(2) - 100;
+    let start = 3_000_017u64.pow(2) - 100;
     let end = start + u64::from(STREAM_BATCH_SIZE) + 99;
     let full_path = temp_path("wide-shared-full");
     let resumed_path = temp_path("wide-shared-resumed");
